@@ -23,3 +23,9 @@ def update_vertex(vertex_id, new_x_position, new_y_position):
 def add_neighbor_to_vertex(vertex, neighbor):
     vertex.neighbors.append(neighbor)
     db_util.save_data_in_db(vertex)
+
+
+# adding only in one way
+def delete_neighbor_from_vertex(vertex, neighbor):
+    vertex.neighbors.remove(neighbor)
+    db_util.save_data_in_db(vertex)

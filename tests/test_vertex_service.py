@@ -1,5 +1,6 @@
 import random
 
+from app.app import db
 from app.models import Vertex
 from app.services import vertex_service as vertex_service
 from tests import helper
@@ -53,4 +54,20 @@ def test_add_neighbor_to_vertex(app):
         # when
         vertex_service.add_neighbor_to_vertex(vertex, neighbor)
         # then
-        assert neighbor in vertex.neighbors
+        updated_vertex = Vertex.query.get(vertex.id)
+        assert neighbor in updated_vertex
+
+
+def test_delete_neighbor_to_vertex(app):
+    with app.app_context():
+        # given
+        vertex = helper.get_test_vertex_in_db()
+        neighbor = helper.get_test_vertex_in_db()
+        vertex.neighbors.append(neighbor)
+        db.session.add(vertex)
+        db.session.commit()
+        # when
+        vertex_service.delete_neighbor_from_vertex(vertex, neighbor)
+        # then
+        updated_vertex = Vertex.query.get(vertex.id)
+        assert neighbor not in updated_vertex.neighbors
