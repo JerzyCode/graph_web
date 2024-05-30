@@ -17,3 +17,9 @@ def update_vertex(vertex_id, new_x_position, new_y_position):
     vertex_to_update.x = new_x_position
     vertex_to_update.y = new_y_position
     db.save_data_in_db(vertex_to_update)
+
+
+# adding only in one way
+def add_neighbor_to_vertex(vertex, neighbor):
+    vertex.neighbors.append(neighbor)
+    db.save_data_in_db(vertex)

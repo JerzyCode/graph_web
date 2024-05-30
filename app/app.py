@@ -4,9 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-def create_app():
+def create_app(db_url='sqlite:///app.db'):
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.template_folder = '../templates/'
     app.static_folder = '../static/'
     db.init_app(app)
