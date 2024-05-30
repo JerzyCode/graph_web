@@ -1,4 +1,4 @@
-from app.models import Graph
+from app.models import Graph, Vertex, Edge
 
 from app.services import graph_service
 from tests import helper
@@ -34,3 +34,8 @@ def test_delete_graph_with_edges(app):
         graph_to_delete = helper.get_test_graph_with_edges_in_db()
         # when
         graph_service.delete_graph(graph_to_delete.id)
+        # then
+        deleted_graph = Graph.query.get(graph_to_delete.id)
+        assert deleted_graph is None
+        assert Vertex.query.filter_by(graph_id=graph_to_delete.id).count() == 0
+        assert Edge.query.filter_by(graph_id=graph_to_delete.id).count() == 0
