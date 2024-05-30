@@ -6,13 +6,13 @@ from app.services import vertex_service as vertex_service
 from tests import helper
 
 
-def test_save_vertex(app):
+def test_create_vertex(app):
     with app.app_context():
         # given
         x_position = random.randint(0, 500)
         y_position = random.randint(0, 500)
         # when
-        vertex_service.save_vertex(x_position, y_position)
+        vertex_service.create_vertex(x_position, y_position)
         # then
         saved_vertex = Vertex.query.first()
         assert saved_vertex is not None
@@ -55,7 +55,7 @@ def test_add_neighbor_to_vertex(app):
         vertex_service.add_neighbor_to_vertex(vertex, neighbor)
         # then
         updated_vertex = Vertex.query.get(vertex.id)
-        assert neighbor in updated_vertex
+        assert neighbor in updated_vertex.neighbors
 
 
 def test_delete_neighbor_to_vertex(app):

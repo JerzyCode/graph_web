@@ -2,7 +2,7 @@ from app.models import Vertex
 from app.utils import database_util as db_util
 
 
-def save_vertex(x_position, y_position):
+def create_vertex(x_position, y_position):
     vertex = Vertex(x=x_position, y=y_position)
     db_util.save_data_in_db(vertex)
 

@@ -5,13 +5,13 @@ from app.services import edge_service as edge_service
 from tests import helper
 
 
-def test_save_edge(app):
+def test_create_edge(app):
     with app.app_context():
         # given
         vertex_in = helper.get_test_vertex_in_db()
         vertex_out = helper.get_test_vertex_in_db()
         # when
-        edge_service.save_edge(vertex_in, vertex_out)
+        edge_service.create_edge(vertex_in, vertex_out)
         # then
         saved_edge = Edge.query.first()
         assert saved_edge.vertex_in_id == vertex_in.id

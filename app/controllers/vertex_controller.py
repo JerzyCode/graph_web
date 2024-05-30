@@ -11,7 +11,7 @@ vertex_bp = Blueprint('main', __name__, url_prefix='/vertex')
 def add_vertex():
     x = request.args.get('x')
     y = request.args.get('y')
-    vertex_service.save_vertex(x, y)
+    vertex_service.create_vertex(x, y)
     response = make_response('Vertex added successfully', 200)
     return response
 

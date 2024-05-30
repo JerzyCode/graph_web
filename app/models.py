@@ -1,5 +1,5 @@
 from app.app import db
-from app.utils.constants import VERTEX_ID_COLUMN, VERTEX_TABLE_NAME
+from app.utils.constants import VERTEX_ID_COLUMN, VERTEX_TABLE_NAME, EDGE_TABLE_NAME, GRAPH_TABLE_NAME
 
 neighbors_table = db.Table('neighbors_table',
                            db.Column('vertex_id', db.Integer, db.ForeignKey(VERTEX_ID_COLUMN), primary_key=True),
@@ -10,6 +10,8 @@ class Vertex(db.Model):
     __tablename__ = VERTEX_TABLE_NAME
 
     id = db.Column(db.Integer, primary_key=True)
+    graph_id = db.Column(db.Integer, db.ForeignKey('graph_table.id', ondelete='CASCADE'))
+
     x = db.Column(db.Float)
     y = db.Column(db.Float)
     neighbors = db.relationship('Vertex', secondary='neighbors_table',
@@ -32,9 +34,11 @@ class Vertex(db.Model):
 
 
 class Edge(db.Model):
-    __tablename__ = 'edge_table'
+    __tablename__ = EDGE_TABLE_NAME
 
     id = db.Column(db.Integer, primary_key=True)
+    graph_id = db.Column(db.Integer, db.ForeignKey('graph_table.id', ondelete='CASCADE'))
+
     vertex_out_id = db.Column(db.Integer, db.ForeignKey(VERTEX_ID_COLUMN))
     vertex_in_id = db.Column(db.Integer, db.ForeignKey(VERTEX_ID_COLUMN))
 
@@ -53,3 +57,17 @@ class Edge(db.Model):
             'vertex_from': self.vertex_from,
             'vertex_to': self.vertex_to
         }
+
+
+class Graph(db.Model):
+    __tablename__ = GRAPH_TABLE_NAME
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String())
+    edges = db.relationship('Edge', lazy='dynamic', cascade='all, delete-orphan')
+    vertices = db.relationship('Vertex', lazy='dynamic', cascade='all, delete-orphan')
+
+    def __init__(self, name):
+        self.name = name
+        self.edges = []
+        self.vertices = []
