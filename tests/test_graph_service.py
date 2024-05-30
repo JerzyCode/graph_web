@@ -1,6 +1,6 @@
 import random
 
-from app.models import Graph, Vertex, Edge
+from app.models import Graph, Vertex, Edge, GraphDTO
 from app.services import graph_service
 from tests import helper
 
@@ -97,3 +97,19 @@ def test_add_edge_to_graph_with_exist_edge(app):
         assert updated_graph is not None
         assert updated_graph.vertices.count() == 2
         assert updated_graph.edges.count() == edge_count_before
+
+
+def test_get_graph(app):
+    with app.app_context():
+        # given
+        graph = helper.get_test_graph_with_edges_in_db()
+        # when
+        result = graph_service.get_graph_by_id(graph.id)
+        print(result.map_to_dictionary())
+        # then
+        assert result is not None
+        assert isinstance(result, GraphDTO)
+        assert result.vertices == graph.vertices.all()
+        assert result.edges == graph.edges.all()
+        assert result.id == graph.id
+        assert result.name == graph.name

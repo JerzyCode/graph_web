@@ -1,4 +1,4 @@
-from app.models import Graph, Vertex
+from app.models import Graph, Vertex, GraphDTO
 from app.services import edge_service
 from app.services import vertex_service
 from app.utils import database_util as db_util
@@ -27,6 +27,13 @@ def add_edge_to_graph(graph_id, vertex_in_id, vertex_out_id):
     edge_service.create_edge(vertex_in=vertex_in, vertex_out=vertex_out, graph_id=graph_id)
     vertex_service.add_neighbor_to_vertex(vertex_in, vertex_out)
     vertex_service.add_neighbor_to_vertex(vertex_out, vertex_in)
+
+
+def get_graph_by_id(graph_id):
+    graph = Graph.query.get_or_404(graph_id)
+    vertices = graph.vertices.all()
+    edges = graph.edges.all()
+    return GraphDTO(id=graph_id, name=graph.name, vertices=vertices, edges=edges)
 
 
 def _check_if_graph_has_edge(graph, vertex_in, vertex_out):
