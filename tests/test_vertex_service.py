@@ -1,21 +1,8 @@
 import random
 
-from app.app import db
 from app.models import Vertex
 from app.services import vertex_service as vertex_service
-
-
-def get_test_vertex_no_db():
-    x_position = random.randint(0, 500)
-    y_position = random.randint(0, 500)
-    return Vertex(x_position, y_position)
-
-
-def get_test_vertex_in_db():
-    vertex = get_test_vertex_no_db()
-    db.session.add(vertex)
-    db.session.commit()
-    return Vertex.query.get(vertex.id)
+from tests import helper
 
 
 def test_save_vertex(app):
@@ -35,7 +22,7 @@ def test_save_vertex(app):
 def test_delete_vertex(app):
     with app.app_context():
         # given
-        vertex_to_delete = get_test_vertex_in_db()
+        vertex_to_delete = helper.get_test_vertex_in_db()
         # when
         vertex_service.delete_vertex(vertex_to_delete.id)
         # then
@@ -45,7 +32,7 @@ def test_delete_vertex(app):
 def test_update_vertex(app):
     with app.app_context():
         # given
-        vertex_to_update = get_test_vertex_in_db()
+        vertex_to_update = helper.get_test_vertex_in_db()
         new_x = random.randint(0, 500)
         new_y = random.randint(0, 500)
         # when
@@ -61,8 +48,8 @@ def test_update_vertex(app):
 def test_add_neighbor_to_vertex(app):
     with app.app_context():
         # given
-        vertex = get_test_vertex_in_db()
-        neighbor = get_test_vertex_in_db()
+        vertex = helper.get_test_vertex_in_db()
+        neighbor = helper.get_test_vertex_in_db()
         # when
         vertex_service.add_neighbor_to_vertex(vertex, neighbor)
         # then
