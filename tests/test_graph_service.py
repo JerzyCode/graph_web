@@ -58,3 +58,42 @@ def test_add_vertex_to_graph(app):
         assert added_vertex is not None
         assert added_vertex.x == vertex_x
         assert added_vertex.y == vertex_y
+
+
+def test_add_edge_with_no_exist_edge(app):
+    with app.app_context():
+        # given
+        graph = helper.get_empty_test_graph_in_db()
+        edge_count_before = graph.edges.count()
+        vertex_in = helper.get_test_vertex_with_graph_id_in_db(graph_id=graph.id)
+        vertex_out = helper.get_test_vertex_with_graph_id_in_db(graph_id=graph.id)
+        # when
+        graph_service.add_edge_to_graph(graph_id=graph.id, vertex_in_id=vertex_in.id, vertex_out_id=vertex_out.id)
+        # then
+        updated_graph = Graph.query.get(graph.id)
+        updated_vertex_in = Vertex.query.get(vertex_in.id)
+        updated_vertex_out = Vertex.query.get(vertex_out.id)
+        added_edge = updated_graph.edges.first()
+        assert updated_graph is not None
+        assert added_edge is not None
+        assert updated_graph.vertices.count() == 2
+        assert updated_graph.edges.count() == edge_count_before + 1
+        assert updated_vertex_out in updated_vertex_in.neighbors
+        assert updated_vertex_in in updated_vertex_out.neighbors
+
+
+def test_add_edge_to_graph_with_exist_edge(app):
+    with app.app_context():
+        # given
+        graph = helper.get_test_graph_with_edges_in_db()
+        edge_count_before = graph.edges.count()
+        existing_edge = graph.edges.first()
+        vertex_in = existing_edge.vertex_in
+        vertex_out = existing_edge.vertex_out
+        # when
+        graph_service.add_edge_to_graph(graph_id=graph.id, vertex_in_id=vertex_in.id, vertex_out_id=vertex_out.id)
+        # then
+        updated_graph = Graph.query.get(graph.id)
+        assert updated_graph is not None
+        assert updated_graph.vertices.count() == 2
+        assert updated_graph.edges.count() == edge_count_before
