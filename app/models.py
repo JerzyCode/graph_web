@@ -53,7 +53,7 @@ class Edge(db.Model):
         self.vertex_out_id = vertex_out.id
         self.graph_id = graph_id
 
-    def to_dict(self):
+    def map_to_dictionary(self):
         return {
             'id': self.id,
             'vertex_from': self.vertex_from,

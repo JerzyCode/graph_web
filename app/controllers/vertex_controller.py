@@ -4,7 +4,7 @@ from app.app import db
 from app.models import Vertex
 from app.services import vertex_service as vertex_service
 
-vertex_bp = Blueprint('main', __name__, url_prefix='/vertex')
+vertex_bp = Blueprint('vertex', __name__, url_prefix='/vertex')
 
 
 @vertex_bp.route(rule='', methods=['POST'])
@@ -19,7 +19,7 @@ def add_vertex():
 @vertex_bp.route(rule='', methods=['GET'])
 def get_all_vertices():
     vertices = Vertex.query.all()
-    vertices_json = [vertex.to_dict() for vertex in vertices]
+    vertices_json = [vertex.map_to_dictionary() for vertex in vertices]
     return jsonify(vertices_json)
 
 

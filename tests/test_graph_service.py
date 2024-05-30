@@ -1,5 +1,6 @@
-from app.models import Graph, Vertex, Edge
+import random
 
+from app.models import Graph, Vertex, Edge
 from app.services import graph_service
 from tests import helper
 
@@ -39,3 +40,21 @@ def test_delete_graph_with_edges(app):
         assert deleted_graph is None
         assert Vertex.query.filter_by(graph_id=graph_to_delete.id).count() == 0
         assert Edge.query.filter_by(graph_id=graph_to_delete.id).count() == 0
+
+
+def test_add_vertex_to_graph(app):
+    with app.app_context():
+        # given
+        vertex_x = random.randint(0, 500)
+        vertex_y = random.randint(0, 500)
+        graph = helper.get_empty_test_graph_in_db()
+        # when
+        graph_service.add_vertex_to_graph(graph_id=graph.id, vertex_x=vertex_x, vertex_y=vertex_y)
+        # then
+        updated_graph = Graph.query.get(graph.id)
+        added_vertex = updated_graph.vertices.first()
+        assert updated_graph is not None
+        assert updated_graph.vertices.count() == 1
+        assert added_vertex is not None
+        assert added_vertex.x == vertex_x
+        assert added_vertex.y == vertex_y
