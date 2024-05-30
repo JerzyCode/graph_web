@@ -19,9 +19,10 @@ class Vertex(db.Model):
                                 secondaryjoin=id == neighbors_table.c.neighbor_id,
                                 backref='connected_to')
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, graph_id=None):
         self.x = x
         self.y = y
+        self.graph_id = graph_id
         self.neighbors = []
 
     def to_dict(self):
@@ -45,11 +46,12 @@ class Edge(db.Model):
     vertex_out = db.relationship('Vertex', foreign_keys=[vertex_out_id])
     vertex_in = db.relationship('Vertex', foreign_keys=[vertex_in_id])
 
-    def __init__(self, vertex_in, vertex_out):
+    def __init__(self, vertex_in, vertex_out, graph_id=None):
         self.vertex_in = vertex_in
         self.vertex_in_id = vertex_in.id
         self.vertex_out = vertex_out
         self.vertex_out_id = vertex_out.id
+        self.graph_id = graph_id
 
     def to_dict(self):
         return {
