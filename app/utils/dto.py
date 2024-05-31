@@ -2,7 +2,6 @@ class GraphDTO:
     def __init__(self, id, name, vertices, edges):
         self.id = id
         self.name = name
-        self.name = name
         self.edges = edges
         self.vertices = vertices
 

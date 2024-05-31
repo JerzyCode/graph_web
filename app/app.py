@@ -11,7 +11,7 @@ def create_app(db_url='sqlite:///app.db'):
     app.static_folder = '../static/'
     db.init_app(app)
     from app.controllers.main_controller import main_bp
-    from app.controllers.vertex_controller import vertex_bp
-    app.register_blueprint(vertex_bp)
+    from app.controllers.graph_controller import graph_bp
     app.register_blueprint(main_bp)
+    app.register_blueprint(graph_bp)
     return app
