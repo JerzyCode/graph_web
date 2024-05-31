@@ -1,7 +1,8 @@
-from app.models import Graph, Vertex, GraphDTO
+from app.models import Graph, Vertex
 from app.services import edge_service
 from app.services import vertex_service
 from app.utils import database_util as db_util
+from app.utils.dto import GraphDTO
 
 
 def create_empty_graph(graph_name):
