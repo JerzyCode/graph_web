@@ -39,6 +39,12 @@ def _get_test_edge_with_graph_id_in_db(vertex_in, vertex_out, graph_id):
     return Edge.query.get(edge.id)
 
 
+def get_test_edge_with_vertices_in_db():
+    vertex_in = get_test_vertex_in_db()
+    vertex_out = get_test_vertex_in_db()
+    return _get_test_edge_with_graph_id_in_db(vertex_in, vertex_out, graph_id=None)
+
+
 def get_test_graph_with_edges_in_db():
     graph = get_empty_test_graph_in_db()
     vertex_in = get_test_vertex_with_graph_id_in_db(graph.id)
@@ -53,3 +59,14 @@ def get_test_graph_with_edges_in_db():
     db.session.add(graph)
     db.session.commit()
     return Graph.query.get(graph.id)
+
+
+def get_test_vertex_with_two_neighbors_in_db():
+    vertex = get_test_vertex_in_db()
+    first_neigh = get_test_vertex_in_db()
+    second_neigh = get_test_vertex_in_db()
+    vertex.neighbors.append(first_neigh)
+    vertex.neighbors.append(second_neigh)
+    db.session.add(vertex)
+    db.session.commit()
+    return Vertex.query.get(vertex.id)

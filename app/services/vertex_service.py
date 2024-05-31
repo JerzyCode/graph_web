@@ -25,7 +25,13 @@ def add_neighbor_to_vertex(vertex, neighbor):
     db_util.save_data_in_db(vertex)
 
 
-# adding only in one way
+# removing only in one way
 def delete_neighbor_from_vertex(vertex, neighbor):
     vertex.neighbors.remove(neighbor)
     db_util.save_data_in_db(vertex)
+
+
+def delete_all_neighbors(vertex):
+    neighbors_copy = list(vertex.neighbors)
+    for neighbor in neighbors_copy:
+        delete_neighbor_from_vertex(vertex, neighbor)

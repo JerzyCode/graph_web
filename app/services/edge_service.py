@@ -10,3 +10,7 @@ def create_edge(vertex_in, vertex_out, graph_id=None):
 def delete_edge(edge_id):
     edge = Edge.query.get_or_404(edge_id)
     db_util.delete_data_in_db(edge)
+
+
+def is_vertex_in_edge(vertex, edge):
+    return edge.vertex_in == vertex or edge.vertex_out == vertex

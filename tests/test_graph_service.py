@@ -1,8 +1,9 @@
 import random
 
-from app.models import Graph, Vertex, Edge, GraphDTO
+from app.models import Graph, Vertex, Edge
 from app.services import graph_service
-from tests import helper
+from app.utils.dto import GraphDTO
+from tests import helper_test
 
 
 def test_create_graph(app):
@@ -32,7 +33,7 @@ def test_delete_empty_graph(app):
 def test_delete_graph_with_edges(app):
     with app.app_context():
         # given
-        graph_to_delete = helper.get_test_graph_with_edges_in_db()
+        graph_to_delete = helper_test.get_test_graph_with_edges_in_db()
         # when
         graph_service.delete_graph(graph_to_delete.id)
         # then
@@ -47,7 +48,7 @@ def test_add_vertex_to_graph(app):
         # given
         vertex_x = random.randint(0, 500)
         vertex_y = random.randint(0, 500)
-        graph = helper.get_empty_test_graph_in_db()
+        graph = helper_test.get_empty_test_graph_in_db()
         # when
         graph_service.add_vertex_to_graph(graph_id=graph.id, vertex_x=vertex_x, vertex_y=vertex_y)
         # then
@@ -63,10 +64,10 @@ def test_add_vertex_to_graph(app):
 def test_add_edge_with_no_exist_edge(app):
     with app.app_context():
         # given
-        graph = helper.get_empty_test_graph_in_db()
+        graph = helper_test.get_empty_test_graph_in_db()
         edge_count_before = graph.edges.count()
-        vertex_in = helper.get_test_vertex_with_graph_id_in_db(graph_id=graph.id)
-        vertex_out = helper.get_test_vertex_with_graph_id_in_db(graph_id=graph.id)
+        vertex_in = helper_test.get_test_vertex_with_graph_id_in_db(graph_id=graph.id)
+        vertex_out = helper_test.get_test_vertex_with_graph_id_in_db(graph_id=graph.id)
         # when
         graph_service.add_edge_to_graph(graph_id=graph.id, vertex_in_id=vertex_in.id, vertex_out_id=vertex_out.id)
         # then
@@ -85,7 +86,7 @@ def test_add_edge_with_no_exist_edge(app):
 def test_add_edge_to_graph_with_exist_edge(app):
     with app.app_context():
         # given
-        graph = helper.get_test_graph_with_edges_in_db()
+        graph = helper_test.get_test_graph_with_edges_in_db()
         edge_count_before = graph.edges.count()
         existing_edge = graph.edges.first()
         vertex_in = existing_edge.vertex_in
@@ -102,7 +103,7 @@ def test_add_edge_to_graph_with_exist_edge(app):
 def test_get_graph(app):
     with app.app_context():
         # given
-        graph = helper.get_test_graph_with_edges_in_db()
+        graph = helper_test.get_test_graph_with_edges_in_db()
         # when
         result = graph_service.get_graph_by_id(graph.id)
         print(result.map_to_dictionary())
