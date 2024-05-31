@@ -22,7 +22,7 @@ def test_create_graph(app):
 def test_delete_empty_graph(app):
     with app.app_context():
         # given
-        graph_to_delete = helper.get_empty_test_graph_in_db()
+        graph_to_delete = helper_test.get_empty_test_graph_in_db()
         # when
         graph_service.delete_graph(graph_to_delete.id)
         # then
