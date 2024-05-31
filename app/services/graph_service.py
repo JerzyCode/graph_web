@@ -1,4 +1,4 @@
-from app.models import Graph, Vertex
+from app.models import Graph, Vertex, Edge
 from app.services import edge_service
 from app.services import vertex_service
 from app.utils import database_util as db_util
@@ -30,6 +30,23 @@ def add_edge_to_graph(graph_id, vertex_in_id, vertex_out_id):
     vertex_service.add_neighbor_to_vertex(vertex_out, vertex_in)
 
 
+def delete_vertex_from_graph(graph_id, vertex_id):
+    graph = Graph.query.get_or_404(graph_id)
+    vertex_to_delete = Vertex.query.get_or_404(vertex_id)
+    vertex_service.delete_all_neighbors(vertex_to_delete)
+    _delete_vertex_with_incident_edges(graph, vertex_to_delete)
+    vertex_service.delete_vertex(vertex_to_delete.id)
+
+
+def delete_edge_from_graph(edge_id):
+    edge_to_delete = Edge.query.get_or_404(edge_id)
+    vertex_in = edge_to_delete.vertex_in
+    vertex_out = edge_to_delete.vertex_out
+    vertex_service.delete_neighbor_from_vertex(vertex_in, vertex_out)
+    vertex_service.delete_neighbor_from_vertex(vertex_out, vertex_in)
+    edge_service.delete_edge(edge_id)
+
+
 def get_graph_by_id(graph_id):
     graph = Graph.query.get_or_404(graph_id)
     vertices = graph.vertices.all()
@@ -40,3 +57,10 @@ def get_graph_by_id(graph_id):
 def _check_if_graph_has_edge(graph, vertex_in, vertex_out):
     edge = graph.edges.filter_by(vertex_in=vertex_in, vertex_out=vertex_out).first()
     return edge is not None
+
+
+def _delete_vertex_with_incident_edges(graph, vertex):
+    for edge in graph.edges.filter_by(vertex_in=vertex):
+        edge_service.delete_edge(edge.id)
+    for edge in graph.edges.filter_by(vertex_out=vertex):
+        edge_service.delete_edge(edge.id)

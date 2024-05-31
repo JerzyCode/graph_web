@@ -51,12 +51,15 @@ def get_test_graph_with_edges_in_db():
     vertex_out = get_test_vertex_with_graph_id_in_db(graph.id)
     edge = _get_test_edge_with_graph_id_in_db(vertex_in, vertex_out, graph.id)
 
+    vertex_in.neighbors.append(vertex_out)
+    vertex_out.neighbors.append(vertex_in)
+
     graph.vertices.append(vertex_in)
     graph.vertices.append(vertex_out)
 
     graph.edges.append(edge)
 
-    db.session.add(graph)
+    db.session.add_all([vertex_in, vertex_out, graph])
     db.session.commit()
     return Graph.query.get(graph.id)
 

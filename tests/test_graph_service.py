@@ -11,7 +11,7 @@ def test_create_graph(app):
         # given
         graph_name = 'test_graph'
         # when
-        graph_service.create_empty_graph(graph_name)
+        graph_service.create_empty_graph(graph_name=graph_name)
         # then
         saved_graph = Graph.query.filter_by(name=graph_name).first()
         assert saved_graph is not None
@@ -24,7 +24,7 @@ def test_delete_empty_graph(app):
         # given
         graph_to_delete = helper_test.get_empty_test_graph_in_db()
         # when
-        graph_service.delete_graph(graph_to_delete.id)
+        graph_service.delete_graph(graph_id=graph_to_delete.id)
         # then
         deleted = Graph.query.filter_by(name=graph_to_delete.name).first()
         assert deleted is None
@@ -35,7 +35,7 @@ def test_delete_graph_with_edges(app):
         # given
         graph_to_delete = helper_test.get_test_graph_with_edges_in_db()
         # when
-        graph_service.delete_graph(graph_to_delete.id)
+        graph_service.delete_graph(graph_id=graph_to_delete.id)
         # then
         deleted_graph = Graph.query.get(graph_to_delete.id)
         assert deleted_graph is None
@@ -105,8 +105,7 @@ def test_get_graph(app):
         # given
         graph = helper_test.get_test_graph_with_edges_in_db()
         # when
-        result = graph_service.get_graph_by_id(graph.id)
-        print(result.map_to_dictionary())
+        result = graph_service.get_graph_by_id(graph_id=graph.id)
         # then
         assert result is not None
         assert isinstance(result, GraphDTO)
@@ -114,3 +113,36 @@ def test_get_graph(app):
         assert result.edges == graph.edges.all()
         assert result.id == graph.id
         assert result.name == graph.name
+
+
+def test_delete_vertex_from_graph(app):
+    with app.app_context():
+        # given
+        graph = helper_test.get_test_graph_with_edges_in_db()
+        vertex_to_delete = graph.vertices.first()
+        # when
+        graph_service.delete_vertex_from_graph(graph_id=graph.id, vertex_id=vertex_to_delete.id)
+        # then
+        updated_graph = Graph.query.get(graph.id)
+        vertex_in_graph = updated_graph.vertices.first()
+        assert updated_graph is not None
+        assert updated_graph.vertices.count() == 1
+        assert updated_graph.edges.count() == 0
+        assert vertex_in_graph != vertex_to_delete
+        assert vertex_to_delete not in vertex_in_graph.neighbors
+
+
+def test_delete_edge_from_graph(app):
+    with app.app_context():
+        # given
+        graph = helper_test.get_test_graph_with_edges_in_db()
+        edge_to_delete = graph.edges.first()
+        # when
+        graph_service.delete_edge_from_graph(edge_id=edge_to_delete.id)
+        # then
+        updated_graph = Graph.query.get(graph.id)
+        updated_vertices = updated_graph.vertices.all()
+        assert updated_graph.edges.count() == 0
+        assert updated_graph.vertices.count() == 2
+        for vertex in updated_vertices:
+            assert vertex.neighbors == []
