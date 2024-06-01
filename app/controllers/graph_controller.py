@@ -33,6 +33,15 @@ class GraphController:
             graph_dto = self._service.get_graph_by_id(graph_id=graph_id)
             return jsonify(graph_dto.map_to_dictionary()), 200
 
+    def handle_put_graph_request(self, req):
+        graph_id = req.args.get('graph_id')
+        new_name = req.args.get('name')
+        if graph_id is None or new_name is None:
+            return 'No graph_id or name provided', 400
+        else:
+            self._service.update_graph_name(graph_id=graph_id, new_graph_name=new_name)
+            return 'Updated graph name', 200
+
     def handle_create_vertex_request(self, req):
         graph_id = req.args.get('graph_id')
         vertex_x = req.args.get('x')
@@ -51,6 +60,16 @@ class GraphController:
         else:
             self._service.delete_vertex_from_graph(graph_id=graph_id, vertex_id=vertex_id)
             return 'Deleted vertex', 200
+
+    def handle_put_vertex_request(self, req):
+        vertex_id = req.args.get('vertex_id')
+        new_x_position = req.args.get('x')
+        new_y_position = req.args.get('y')
+        if vertex_id is None or new_x_position is None or new_y_position is None:
+            return 'No vertex_id, x or y provided', 400
+        else:
+            self._service.update_vertex_position(vertex_id=vertex_id, new_x_position=new_x_position, new_y_position=new_y_position)
+            return 'Updated vertex', 200
 
     def handle_create_edge_request(self, req):
         graph_id = req.args.get('graph_id')
@@ -74,7 +93,7 @@ class GraphController:
 graph_controller: GraphController = GraphController(service=graph_service)
 
 
-@graph_bp.route(rule='/', methods=['POST', 'DELETE', 'GET'])
+@graph_bp.route(rule='/', methods=['POST', 'DELETE', 'GET', 'PUT'])
 def graph_endpoints():
     if request.method == 'POST':
         return graph_controller.handle_create_graph_request(request)
@@ -82,16 +101,18 @@ def graph_endpoints():
         return graph_controller.handle_delete_graph_request(request)
     elif request.method == 'GET':
         return graph_controller.handle_get_graph_request(request)
-    # TODO UPDATE_NAME
+    elif request.method == 'PUT':
+        return graph_controller.handle_put_graph_request(request)
 
 
-@graph_bp.route(rule='/vertex', methods=['POST', 'DELETE'])
+@graph_bp.route(rule='/vertex', methods=['POST', 'DELETE', 'PUT'])
 def vertex_endpoints():
     if request.method == 'POST':
         return graph_controller.handle_create_vertex_request(request)
     elif request.method == 'DELETE':
         return graph_controller.handle_delete_vertex_request(request)
-    # TODO add update x and y for vertex
+    elif request.method == 'PUT':
+        return graph_controller.handle_put_vertex_request(request)
 
 
 @graph_bp.route(rule='/edge', methods=['POST', 'DELETE'])

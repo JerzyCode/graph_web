@@ -15,8 +15,26 @@ def delete_graph(graph_id):
     db_util.delete_data_in_db(graph_to_delete)
 
 
+def update_graph_name(graph_id, new_graph_name):
+    graph_to_update = Graph.query.get(graph_id)
+    graph_to_update.name = new_graph_name
+    db_util.save_data_in_db(graph_to_update)
+
+
 def add_vertex_to_graph(graph_id, vertex_x, vertex_y):
     vertex_service.create_vertex(x_position=vertex_x, y_position=vertex_y, graph_id=graph_id)
+
+
+def update_vertex_position(vertex_id, new_x_position, new_y_position):
+    vertex_service.update_vertex(vertex_id, new_x_position=new_x_position, new_y_position=new_y_position)
+
+
+def delete_vertex_from_graph(graph_id, vertex_id):
+    graph = Graph.query.get_or_404(graph_id)
+    vertex_to_delete = Vertex.query.get_or_404(vertex_id)
+    vertex_service.delete_all_neighbors(vertex_to_delete)
+    _delete_vertex_with_incident_edges(graph, vertex_to_delete)
+    vertex_service.delete_vertex(vertex_to_delete.id)
 
 
 def add_edge_to_graph(graph_id, vertex_in_id, vertex_out_id):
@@ -28,14 +46,6 @@ def add_edge_to_graph(graph_id, vertex_in_id, vertex_out_id):
     edge_service.create_edge(vertex_in=vertex_in, vertex_out=vertex_out, graph_id=graph_id)
     vertex_service.add_neighbor_to_vertex(vertex_in, vertex_out)
     vertex_service.add_neighbor_to_vertex(vertex_out, vertex_in)
-
-
-def delete_vertex_from_graph(graph_id, vertex_id):
-    graph = Graph.query.get_or_404(graph_id)
-    vertex_to_delete = Vertex.query.get_or_404(vertex_id)
-    vertex_service.delete_all_neighbors(vertex_to_delete)
-    _delete_vertex_with_incident_edges(graph, vertex_to_delete)
-    vertex_service.delete_vertex(vertex_to_delete.id)
 
 
 def delete_edge_from_graph(edge_id):

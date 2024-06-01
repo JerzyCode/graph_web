@@ -62,6 +62,26 @@ def test_get_graph_endpoint_should_return_200(client):
         mock_graph_service.assert_called_once()
 
 
+def test_put_graph_endpoint_should_return_200(client):
+    with patch('app.services.graph_service.update_graph_name') as mock_graph_service:
+        # given
+        # when
+        response = client.put('/graph/', query_string={'graph_id': 1, 'name': 'updated_name'})
+        # then
+        assert response.status_code == 200
+        mock_graph_service.assert_called_once()
+
+
+def test_put_graph_endpoint_should_return_404(client):
+    with patch('app.services.graph_service.update_graph_name') as mock_graph_service:
+        # given
+        # when
+        response = client.put('/graph/', query_string={'wrong_key': 1, 'name': 'updated_name'})
+        # then
+        assert response.status_code == 400
+        mock_graph_service.assert_not_called()
+
+
 def test_get_graph_endpoint_should_return_404(client):
     with patch('app.services.graph_service.get_graph_by_id') as mock_graph_service:
         # given
@@ -107,6 +127,26 @@ def test_delete_vertex_should_return_400(client):
         # given
         # when
         response = client.delete('/graph/vertex', query_string={'wrong_key': 1})
+        # then
+        assert response.status_code == 400
+        mock_graph_service.assert_not_called()
+
+
+def test_put_vertex_should_return_200(client):
+    with patch('app.services.graph_service.update_vertex_position') as mock_graph_service:
+        # given
+        # when
+        response = client.put('/graph/vertex', query_string={'vertex_id': 1, 'x': 512, 'y': 124})
+        # then
+        assert response.status_code == 200
+        mock_graph_service.assert_called_once()
+
+
+def test_put_vertex_should_return_400(client):
+    with patch('app.services.graph_service.update_vertex_position') as mock_graph_service:
+        # given
+        # when
+        response = client.put('/graph/vertex', query_string={'wrong_key': 1, 'x': 512, 'y': 124})
         # then
         assert response.status_code == 400
         mock_graph_service.assert_not_called()

@@ -43,6 +43,19 @@ def test_delete_graph_with_edges(app):
         assert Edge.query.filter_by(graph_id=graph_to_delete.id).count() == 0
 
 
+def test_update_graph_name(app):
+    with app.app_context():
+        # given
+        new_name = 'updated_name'
+        graph_to_update = helper_test.get_empty_test_graph_in_db()
+        # when
+        graph_service.update_graph_name(graph_to_update.id, new_graph_name=new_name)
+        # then
+        updated_graph = Graph.query.get(graph_to_update.id)
+        assert updated_graph is not None
+        assert updated_graph.name == new_name
+
+
 def test_add_vertex_to_graph(app):
     with app.app_context():
         # given
