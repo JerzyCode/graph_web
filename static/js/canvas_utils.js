@@ -38,9 +38,9 @@ function prepareEdgeToDraw(edge, preparedVertices) {
 function findPreparedVerticesForEdge(edge, preparedVertices) {
     let verticesForEdge = {}
     preparedVertices.forEach(vertex => {
-        if (vertex.id === edge.vertex1.id)
+        if (vertex.id === edge.vertex_in.id)
             verticesForEdge.vertexIn = vertex
-        if (vertex.id === edge.vertex2.id)
+        if (vertex.id === edge.vertex_out.id)
             verticesForEdge.vertexOut = vertex
     })
     return verticesForEdge
