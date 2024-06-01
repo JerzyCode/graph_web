@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 
 from app.services import graph_service
 
-graph_bp = Blueprint('graph', __name__, url_prefix='/graph')
+graph_bp = Blueprint('graph', __name__, url_prefix='/graph/')
 
 
 class GraphController:
@@ -87,8 +87,6 @@ def graph_endpoints():
 
 @graph_bp.route(rule='/vertex', methods=['POST', 'DELETE'])
 def vertex_endpoints():
-    print(request.method)
-
     if request.method == 'POST':
         return graph_controller.handle_create_vertex_request(request)
     elif request.method == 'DELETE':
