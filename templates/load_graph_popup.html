@@ -1,0 +1,9 @@
+<div class="popup-content">
+    <div class="popup-title"> TEST 123</div>
+    <ul>
+        {% for graph in graphs %}
+            <li>{{ graph.name }}</li>
+        {% endfor %}
+    </ul>
+    <button class="sidebar-button" id="closeButton" type="button" onclick="closePopup()"> Close</button>
+</div>

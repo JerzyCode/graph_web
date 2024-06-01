@@ -11,10 +11,9 @@ const VERTEX_RADIUS = 10
 const EDGE_COLOR = 'purple'
 
 
-const graph = await fetchGraph(2)
-const vertices = graph.vertices
-const edges = graph.edges
-
+let graph
+let vertices
+let edges
 let currentVertex = null
 let isDragging = false
 
@@ -30,12 +29,21 @@ canvas.onmousemove = handleMouseMove
 
 window.addEventListener('resize', repaint)
 
-let preparedVertices = prepareVerticesToDraw(vertices)
-let preparedEdges = prepareEdgesToDraw(edges, preparedVertices)
+let preparedVertices = []
+let preparedEdges = []
 
+await loadGraph(2)
 drawAllEdges()
 drawAllVertices()
 
+async function loadGraph(graph_id) {
+    graph = await fetchGraph(graph_id)
+    vertices = graph.vertices
+    edges = graph.edges
+    preparedVertices = prepareVerticesToDraw(vertices)
+    preparedEdges = prepareEdgesToDraw(edges, preparedVertices)
+
+}
 
 function handleMouseDown(event) {
     event.preventDefault()
