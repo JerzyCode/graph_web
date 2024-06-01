@@ -3,7 +3,7 @@ import random
 from app.app import db
 from app.models import Vertex
 from app.services import vertex_service as vertex_service
-from tests import helper
+from tests import helper_test
 
 
 def test_create_vertex(app):
@@ -23,7 +23,7 @@ def test_create_vertex(app):
 def test_delete_vertex(app):
     with app.app_context():
         # given
-        vertex_to_delete = helper.get_test_vertex_in_db()
+        vertex_to_delete = helper_test.get_test_vertex_in_db()
         # when
         vertex_service.delete_vertex(vertex_to_delete.id)
         # then
@@ -33,7 +33,7 @@ def test_delete_vertex(app):
 def test_update_vertex(app):
     with app.app_context():
         # given
-        vertex_to_update = helper.get_test_vertex_in_db()
+        vertex_to_update = helper_test.get_test_vertex_in_db()
         new_x = random.randint(0, 500)
         new_y = random.randint(0, 500)
         # when
@@ -49,8 +49,8 @@ def test_update_vertex(app):
 def test_add_neighbor_to_vertex(app):
     with app.app_context():
         # given
-        vertex = helper.get_test_vertex_in_db()
-        neighbor = helper.get_test_vertex_in_db()
+        vertex = helper_test.get_test_vertex_in_db()
+        neighbor = helper_test.get_test_vertex_in_db()
         # when
         vertex_service.add_neighbor_to_vertex(vertex, neighbor)
         # then
@@ -61,8 +61,8 @@ def test_add_neighbor_to_vertex(app):
 def test_delete_neighbor_to_vertex(app):
     with app.app_context():
         # given
-        vertex = helper.get_test_vertex_in_db()
-        neighbor = helper.get_test_vertex_in_db()
+        vertex = helper_test.get_test_vertex_in_db()
+        neighbor = helper_test.get_test_vertex_in_db()
         vertex.neighbors.append(neighbor)
         db.session.add(vertex)
         db.session.commit()
@@ -71,3 +71,14 @@ def test_delete_neighbor_to_vertex(app):
         # then
         updated_vertex = Vertex.query.get(vertex.id)
         assert neighbor not in updated_vertex.neighbors
+
+
+def test_delete_all_neighbors_from_vertex(app):
+    with app.app_context():
+        # given
+        vertex = helper_test.get_test_vertex_with_two_neighbors_in_db()
+        # when
+        vertex_service.delete_all_neighbors(vertex)
+        # then
+        updated_vertex = Vertex.query.get(vertex.id)
+        assert updated_vertex.neighbors == []
