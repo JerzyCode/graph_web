@@ -9,6 +9,6 @@ class GraphDTO:
         return {
             'id': self.id,
             'name': self.name,
-            'edges': self.edges,
-            'vertices': self.vertices
+            'edges': [edge.to_dict() for edge in self.edges],
+            'vertices': [vertex.to_dict() for vertex in self.vertices]
         }
