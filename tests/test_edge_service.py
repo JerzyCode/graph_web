@@ -32,7 +32,7 @@ def test_delete_edge(app):
         # when
         edge_service.delete_edge(saved_edge.id)
         # then
-        assert Edge.query.get(edge.id) is None
+        assert db.session.get(Edge, edge.id) is None
 
 
 def test_is_vertex_in_edge_should_return_true(app):

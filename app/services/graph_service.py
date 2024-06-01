@@ -11,12 +11,12 @@ def create_empty_graph(graph_name):
 
 
 def delete_graph(graph_id):
-    graph_to_delete = Graph.query.get_or_404(graph_id)
+    graph_to_delete = db_util.get_data_from_db_or_404(Graph, graph_id)
     db_util.delete_data_in_db(graph_to_delete)
 
 
 def update_graph_name(graph_id, new_graph_name):
-    graph_to_update = Graph.query.get(graph_id)
+    graph_to_update = db_util.get_data_from_db_or_404(Graph, graph_id)
     graph_to_update.name = new_graph_name
     db_util.save_data_in_db(graph_to_update)
 
@@ -30,17 +30,17 @@ def update_vertex_position(vertex_id, new_x_position, new_y_position):
 
 
 def delete_vertex_from_graph(graph_id, vertex_id):
-    graph = Graph.query.get_or_404(graph_id)
-    vertex_to_delete = Vertex.query.get_or_404(vertex_id)
+    graph = db_util.get_data_from_db_or_404(Graph, graph_id)
+    vertex_to_delete = db_util.get_data_from_db_or_404(Vertex, vertex_id)
     vertex_service.delete_all_neighbors(vertex_to_delete)
     _delete_vertex_with_incident_edges(graph, vertex_to_delete)
     vertex_service.delete_vertex(vertex_to_delete.id)
 
 
 def add_edge_to_graph(graph_id, vertex_in_id, vertex_out_id):
-    vertex_in = Vertex.query.get_or_404(vertex_in_id)
-    vertex_out = Vertex.query.get_or_404(vertex_out_id)
-    graph = Graph.query.get_or_404(graph_id)
+    vertex_in = db_util.get_data_from_db_or_404(Vertex, vertex_in_id)
+    vertex_out = db_util.get_data_from_db_or_404(Vertex, vertex_out_id)
+    graph = db_util.get_data_from_db_or_404(Graph, graph_id)
     if _check_if_graph_has_edge(graph, vertex_in, vertex_out):
         return
     edge_service.create_edge(vertex_in=vertex_in, vertex_out=vertex_out, graph_id=graph_id)
@@ -49,7 +49,7 @@ def add_edge_to_graph(graph_id, vertex_in_id, vertex_out_id):
 
 
 def delete_edge_from_graph(edge_id):
-    edge_to_delete = Edge.query.get_or_404(edge_id)
+    edge_to_delete = db_util.get_data_from_db_or_404(Edge, edge_id)
     vertex_in = edge_to_delete.vertex_in
     vertex_out = edge_to_delete.vertex_out
     vertex_service.delete_neighbor_from_vertex(vertex_in, vertex_out)
@@ -58,7 +58,7 @@ def delete_edge_from_graph(edge_id):
 
 
 def get_graph_by_id(graph_id):
-    graph = Graph.query.get_or_404(graph_id)
+    graph = db_util.get_data_from_db_or_404(Graph, graph_id)
     vertices = graph.vertices.all()
     edges = graph.edges.all()
     return GraphDTO(id=graph_id, name=graph.name, vertices=vertices, edges=edges)
