@@ -13,7 +13,7 @@ def test_create_edge(app):
         # when
         edge_service.create_edge(vertex_in, vertex_out)
         # then
-        saved_edge = Edge.query.first()
+        saved_edge = db.session.query(Edge).first()
         assert saved_edge.vertex_in_id == vertex_in.id
         assert saved_edge.vertex_out_id == vertex_out.id
         assert saved_edge.vertex_in == vertex_in
@@ -28,11 +28,11 @@ def test_delete_edge(app):
         edge = Edge(vertex_in, vertex_out)
         db.session.add(edge)
         db.session.commit()
-        saved_edge = Edge.query.get(edge.id)
+        saved_edge = db.session.get(Edge, edge.id)
         # when
         edge_service.delete_edge(saved_edge.id)
         # then
-        assert Edge.query.get(edge.id) is None
+        assert db.session.get(Edge, edge.id) is None
 
 
 def test_is_vertex_in_edge_should_return_true(app):

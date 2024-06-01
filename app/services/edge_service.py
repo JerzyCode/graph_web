@@ -8,7 +8,7 @@ def create_edge(vertex_in, vertex_out, graph_id=None):
 
 
 def delete_edge(edge_id):
-    edge = Edge.query.get_or_404(edge_id)
+    edge = db_util.get_data_from_db_or_404(Edge, edge_id)
     db_util.delete_data_in_db(edge)
 
 

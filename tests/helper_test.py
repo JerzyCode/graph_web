@@ -14,7 +14,7 @@ def get_test_vertex_in_db():
     vertex = get_test_vertex_no_db()
     db.session.add(vertex)
     db.session.commit()
-    return Vertex.query.get(vertex.id)
+    return db.session.get(Vertex, vertex.id)
 
 
 def get_test_vertex_with_graph_id_in_db(graph_id):
@@ -22,21 +22,22 @@ def get_test_vertex_with_graph_id_in_db(graph_id):
     vertex.graph_id = graph_id
     db.session.add(vertex)
     db.session.commit()
-    return Vertex.query.get(vertex.id)
+    return db.session.get(Vertex, vertex.id)
 
 
 def get_empty_test_graph_in_db():
     graph = Graph(name="test_graph" + str(random.randint(0, 10000)))
     db.session.add(graph)
     db.session.commit()
-    return Graph.query.filter_by(name=graph.name).first()
+    return db.session.query(Graph).filter_by(name=graph.name).first()
 
 
 def _get_test_edge_with_graph_id_in_db(vertex_in, vertex_out, graph_id):
     edge = Edge(vertex_in, vertex_out, graph_id=graph_id)
     db.session.add(edge)
     db.session.commit()
-    return Edge.query.get(edge.id)
+    db.session.get(Edge, edge.id)
+    return db.session.get(Edge, edge.id)
 
 
 def get_test_edge_with_vertices_in_db():
@@ -61,7 +62,7 @@ def get_test_graph_with_edges_in_db():
 
     db.session.add_all([vertex_in, vertex_out, graph])
     db.session.commit()
-    return Graph.query.get(graph.id)
+    return db.session.get(Graph, graph.id)
 
 
 def get_test_vertex_with_two_neighbors_in_db():
@@ -72,4 +73,4 @@ def get_test_vertex_with_two_neighbors_in_db():
     vertex.neighbors.append(second_neigh)
     db.session.add(vertex)
     db.session.commit()
-    return Vertex.query.get(vertex.id)
+    return db.session.get(Vertex, vertex.id)

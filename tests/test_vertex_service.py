@@ -14,20 +14,20 @@ def test_create_vertex(app):
         # when
         vertex_service.create_vertex(x_position, y_position)
         # then
-        saved_vertex = Vertex.query.first()
+        saved_vertex = db.session.query(Vertex).first()
         assert saved_vertex is not None
         assert saved_vertex.x == x_position
         assert saved_vertex.y == y_position
 
 
 def test_delete_vertex(app):
-    with app.app_context():
+    with (app.app_context()):
         # given
         vertex_to_delete = helper_test.get_test_vertex_in_db()
         # when
         vertex_service.delete_vertex(vertex_to_delete.id)
         # then
-        assert Vertex.query.get(vertex_to_delete.id) is None
+        assert db.session.get(Vertex, vertex_to_delete.id) is None
 
 
 def test_update_vertex(app):
@@ -39,7 +39,7 @@ def test_update_vertex(app):
         # when
         vertex_service.update_vertex(vertex_to_update.id, new_x, new_y)
         # then
-        updated_vertex = Vertex.query.get(vertex_to_update.id)
+        updated_vertex = db.session.get(Vertex, vertex_to_update.id)
         assert updated_vertex is not None
         assert updated_vertex.x == new_x
         assert updated_vertex.y == new_y
@@ -54,7 +54,7 @@ def test_add_neighbor_to_vertex(app):
         # when
         vertex_service.add_neighbor_to_vertex(vertex, neighbor)
         # then
-        updated_vertex = Vertex.query.get(vertex.id)
+        updated_vertex = db.session.get(Vertex, vertex.id)
         assert neighbor in updated_vertex.neighbors
 
 
@@ -69,7 +69,7 @@ def test_delete_neighbor_to_vertex(app):
         # when
         vertex_service.delete_neighbor_from_vertex(vertex, neighbor)
         # then
-        updated_vertex = Vertex.query.get(vertex.id)
+        updated_vertex = db.session.get(Vertex, vertex.id)
         assert neighbor not in updated_vertex.neighbors
 
 
@@ -80,5 +80,5 @@ def test_delete_all_neighbors_from_vertex(app):
         # when
         vertex_service.delete_all_neighbors(vertex)
         # then
-        updated_vertex = Vertex.query.get(vertex.id)
+        updated_vertex = db.session.get(Vertex, vertex.id)
         assert updated_vertex.neighbors == []
