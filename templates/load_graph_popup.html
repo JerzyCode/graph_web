@@ -1,8 +1,13 @@
 <div class="popup-content">
-    <div class="popup-title"> TEST 123</div>
+    <div class="popup-title"> Your Graphs</div>
     <ul>
         {% for graph in graphs %}
-            <li>{{ graph.name }}</li>
+            <li class="graph-item">
+                <a href="#" class="graph-index link-as-text" onclick="onLoadGraph({{ graph.id }})">{{ loop.index }}</a>
+                <a href="#" class="graph-name link-as-text" onclick="onLoadGraph({{ graph.id }})">{{ graph.name }}</a>
+                <button class="edit-button">Edit</button>
+                <button class="delete-button">Delete</button>
+            </li>
         {% endfor %}
     </ul>
     <button class="sidebar-button" id="closeButton" type="button" onclick="closePopup()"> Close</button>

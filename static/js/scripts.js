@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const loadGraphButton = document.getElementById('your-graphs-button')
-
+    console.log('set')
     if (loadGraphButton) {
         loadGraphButton.addEventListener('click', openYourGraphsPopup)
     }
-
 });
 
 function loadGraphPopup() {
@@ -32,4 +31,13 @@ window.onclick = function (event) {
         if (event.target === popup) {
             popup.style.display = "none";
         }
+}
+
+async function onLoadGraph(graph_id) {
+    try {
+        await window.loadGraphOnCanvas(graph_id);
+        closePopup();
+    } catch (error) {
+        console.error('Error loading graph occurred:', error);
+    }
 }

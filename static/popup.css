@@ -1,0 +1,73 @@
+.popup-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    font-size: 18px;
+    color: #2dcebc;
+}
+
+.popup-content {
+    background: #272640;
+    padding: 30px;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    box-sizing: border-box;
+    border: solid #2dcebc 1px;
+}
+
+.link-as-text {
+    color: inherit;
+    text-decoration: none;
+}
+
+.popup-title {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 0;
+    text-align: center;
+}
+
+.graph-item {
+    list-style-type: none;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+}
+
+.graph-index {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.graph-name {
+    flex-grow: 1;
+}
+
+.edit-button,
+.delete-button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #2dcebc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.edit-button:hover,
+.delete-button:hover {
+    background-color: #1e9989;
+}

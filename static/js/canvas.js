@@ -32,18 +32,20 @@ window.addEventListener('resize', repaint)
 let preparedVertices = []
 let preparedEdges = []
 
-await loadGraph(2)
+await loadGraphOnCanvas(2)
 drawAllEdges()
 drawAllVertices()
 
-async function loadGraph(graph_id) {
+export async function loadGraphOnCanvas(graph_id) {
     graph = await fetchGraph(graph_id)
     vertices = graph.vertices
     edges = graph.edges
     preparedVertices = prepareVerticesToDraw(vertices)
     preparedEdges = prepareEdgesToDraw(edges, preparedVertices)
-
+    redrawGraph()
 }
+
+window.loadGraphOnCanvas = loadGraphOnCanvas;
 
 function handleMouseDown(event) {
     event.preventDefault()
@@ -127,6 +129,21 @@ function drawAllEdges() {
     for (let edge of preparedEdges) {
         drawEdge(edge)
     }
+}
+
+
+function drawAll() {
+    drawAllEdges()
+    drawAllVertices()
+}
+
+function clearAll() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function redrawGraph() {
+    clearAll()
+    drawAll()
 }
 
 
