@@ -30,7 +30,6 @@ class Vertex(db.Model):
             'id': self.id,
             'x': self.x,
             'y': self.y,
-            'neighbors': self.neighbors
         }
 
 
@@ -53,11 +52,11 @@ class Edge(db.Model):
         self.vertex_out_id = vertex_out.id
         self.graph_id = graph_id
 
-    def map_to_dictionary(self):
+    def to_dict(self):
         return {
             'id': self.id,
-            'vertex_from': self.vertex_from,
-            'vertex_to': self.vertex_to
+            'vertex_in': self.vertex_in.to_dict(),
+            'vertex_out': self.vertex_out.to_dict()
         }
 
 

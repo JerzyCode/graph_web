@@ -35,8 +35,12 @@ body {
 }
 
 .sidebar {
+    align-items: center;
+    justify-content: center;
     border-radius: 15px;
+    margin-right: 10px;
     width: 175px;
+    min-width: 120px;
 }
 
 .canvas-container {
@@ -44,7 +48,6 @@ body {
     display: flex;
     background-color: #eee;
     border-radius: 15px;
-    position: relative;
     overflow: auto;
     min-width: 80vw;
     min-height: 80vh;
@@ -54,6 +57,8 @@ body {
     height: 30px;
     text-align: center;
     margin-top: 15px;
+    color: #2dcebc;
+
 }
 
 canvas {
@@ -62,6 +67,47 @@ canvas {
     width: auto;
     height: auto;
 }
+
+.main-menu {
+    color: #272640;
+    width: 100%;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    font-size: 25px;
+}
+
+
+.menu-line {
+    border: none;
+    border-top: 4px solid #272640;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.sidebar-button {
+    display: block;
+    margin-top: 5px;
+    background-color: #272640;
+    width: 100%;
+    text-align: center;
+    color: #2dcebc;
+    height: 35px;
+    border: solid #2dcebc 1px;
+    padding: 5px 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.5s ease, color 0.5s ease, transform 0.7s;
+    font-size: 18px;
+}
+
+.sidebar-button:hover {
+    background-color: #2dcebc;
+    color: #272640;
+    border: solid #272640 3px;
+    transform: scale(1.1);
+}
+
 
 @media (max-width: 500px) {
 
