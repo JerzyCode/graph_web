@@ -43,6 +43,8 @@ export async function loadGraphOnCanvas(graph_id) {
 
 window.loadGraphOnCanvas = loadGraphOnCanvas;
 
+await loadGraphOnCanvas(2)
+
 function handleMouseDown(event) {
     event.preventDefault()
     for (let path of preparedVertices) {
@@ -88,7 +90,7 @@ function handleMouseMove(event) {
     }
 }
 
-function repaint() {
+export function repaint() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawAllEdges()
     drawAllVertices()

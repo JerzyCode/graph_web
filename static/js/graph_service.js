@@ -11,11 +11,9 @@ export async function fetchGraph(graph_id) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
 
-        const data = await response.json();
-        console.log(data);
-        return data;
+        return await response.json();
     } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
+        console.error('There was a problem with the fetch graph operation:', error);
         throw error;
     }
 }

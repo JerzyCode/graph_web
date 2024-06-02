@@ -2,15 +2,15 @@
     <div class="popup-title"> Your Graphs</div>
     <ul>
         {% for graph in graphs %}
-            <li class="graph-item">
-                <a href="#" id="loadGraphAnchor" onclick="onLoadGraph({{ graph.id }})" class="link-as-text">
+            <li class="graph-item" graph-data-id="{{ graph.id }}">
+                <a href="#" id="loadGraphAnchor" class="link-as-text">
                     <span class="graph-index">{{ loop.index }}</span>
                     <span class="graph-name">{{ graph.name }}</span>
                 </a>
-                <button class="edit-button">Edit</button>
-                <button class="delete-button">Delete</button>
+                <button class="edit-graph-button">Edit</button>
+                <button class="delete-graph-button">Delete</button>
             </li>
         {% endfor %}
     </ul>
-    <button class="sidebar-button" id="closeButton" type="button" onclick="closePopup()"> Close</button>
+    <button class="sidebar-button" id="closeButton" type="button"> Close</button>
 </div>
