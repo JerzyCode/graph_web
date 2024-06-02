@@ -39,9 +39,34 @@
     text-align: center;
 }
 
+.graph-list {
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.graph-list::-webkit-scrollbar {
+    width: 5px;
+    height: 80%;
+}
+
+.graph-list::-webkit-scrollbar-track {
+    border-radius: 15px;
+    background: #272640;
+}
+
+.graph-list::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.graph-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
 .graph-item {
     list-style-type: none;
     padding: 10px 0;
+    margin-right: 6px;
     border-bottom: 1px solid #ccc;
     display: flex;
     align-items: center;

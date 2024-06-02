@@ -1,3 +1,9 @@
+import {deleteGraph} from "./graph_service.js";
+import {clearAll} from "./canvas.js";
+
+
+let currentLoadedGraphId;
+
 export function openYourGraphsPopup() {
     loadYourGraphsPopup().catch(() => console.log('cant open popup'))
     document.getElementById('popup-container').style.display = 'block';
@@ -54,8 +60,26 @@ function setEventListenerLoadGraphButton(button, graphId) {
 
 function setEventListenerDeleteGraphButton(button, graphId) {
     button.addEventListener('click', function (event) {
-        console.log('deleting')
+        const deletedGraphId = deleteGraph(graphId).then(r => {
+            console.log('Deleted graph with id=' + graphId)
+            removeItemFromList(graphId)
+        })
+        if (deletedGraphId === currentLoadedGraphId) {
+            clearAll()
+            currentLoadedGraphId = null
+        }
     });
+}
+
+function removeItemFromList(removedGraphId) {
+    const listItem = document.getElementsByClassName('graph-item')
+    console.log(listItem)
+    Array.from(listItem).forEach(item => {
+        const graphId = item.getAttribute('graph-data-id');
+        if (removedGraphId === graphId) {
+            item.remove()
+        }
+    })
 }
 
 function setEventListenerEditGraphButton(button, graphId) {
@@ -68,6 +92,7 @@ function setEventListenerEditGraphButton(button, graphId) {
 async function onLoadGraph(graphId) {
     try {
         await window.loadGraphOnCanvas(graphId);
+        currentLoadedGraphId = graphId
         closePopup();
     } catch (error) {
         console.error('Error loading graph occurred:', error);
