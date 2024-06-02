@@ -17,7 +17,6 @@ let edges
 let currentVertex = null
 let isDragging = false
 
-
 canvas.width = container.clientWidth
 canvas.height = container.clientHeight
 
@@ -32,9 +31,6 @@ window.addEventListener('resize', repaint)
 let preparedVertices = []
 let preparedEdges = []
 
-await loadGraphOnCanvas(2)
-drawAllEdges()
-drawAllVertices()
 
 export async function loadGraphOnCanvas(graph_id) {
     graph = await fetchGraph(graph_id)
