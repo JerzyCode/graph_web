@@ -82,6 +82,8 @@
 }
 
 .edit-graph-button,
+.confirm-delete-button,
+.cancel-delete-button,
 .delete-graph-button {
     margin-left: 10px;
     padding: 5px 10px;
@@ -94,6 +96,39 @@
 }
 
 .edit-graph-button:hover,
+.confirm-delete-button,
+.cancel-delete-button,
 .delete-graph-button:hover {
     background-color: #1e9989;
+}
+
+
+.confirm-delete-popup-button {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.confirm-delete-button {
+    margin-right: auto;
+    width: 40%;
+}
+
+.cancel-delete-button {
+    width: 40%;
+    margin-left: auto;
+}
+
+.delete-confirm {
+    padding: 20px;
+    width: 50%;
+    margin: 0;
+}
+
+.confirm-delete-popup-header span {
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    text-wrap: revert;
+    display: block;
 }

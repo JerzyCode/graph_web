@@ -2,6 +2,15 @@
     <div class="popup-title"> Your Graphs</div>
     <ul class="graph-list">
         {% for graph in graphs %}
+            <div id="delete-confirm-popup" class="popup-content delete-confirm">
+                <div class="confirm-delete-popup-header">
+                    <span>Do you want to delete graph?</span>
+                </div>
+                <div class="confirm-delete-popup-button">
+                    <button class="confirm-delete-button">Confirm</button>
+                    <button class="cancel-delete-button">Cancel</button>
+                </div>
+            </div>
             <li class="graph-item" graph-data-id="{{ graph.id }}">
                 <a href="#" id="loadGraphAnchor" class="link-as-text">
                     <span class="graph-index">{{ loop.index }}</span>
