@@ -41,7 +41,6 @@ export async function loadGraphOnCanvas(graph_id) {
     redrawGraph()
 }
 
-window.loadGraphOnCanvas = loadGraphOnCanvas;
 
 function handleMouseDown(event) {
     event.preventDefault()
@@ -88,7 +87,7 @@ function handleMouseMove(event) {
     }
 }
 
-function repaint() {
+export function repaint() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawAllEdges()
     drawAllVertices()
@@ -133,7 +132,7 @@ function drawAll() {
     drawAllVertices()
 }
 
-function clearAll() {
+export function clearAll() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -141,5 +140,3 @@ function redrawGraph() {
     clearAll()
     drawAll()
 }
-
-

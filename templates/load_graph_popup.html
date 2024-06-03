@@ -1,16 +1,25 @@
 <div class="popup-content">
     <div class="popup-title"> Your Graphs</div>
-    <ul>
+    <ul class="graph-list">
         {% for graph in graphs %}
-            <li class="graph-item">
-                <a href="#" id="loadGraphAnchor" onclick="onLoadGraph({{ graph.id }})" class="link-as-text">
+            <div id="delete-confirm-popup" class="popup-content delete-confirm">
+                <div class="confirm-delete-popup-header">
+                    <span>Do you want to delete graph?</span>
+                </div>
+                <div class="confirm-delete-popup-button">
+                    <button id="confirm-delete-button" class="confirm-delete-button">Confirm</button>
+                    <button id="cancel-delete-button" class="cancel-delete-button">Cancel</button>
+                </div>
+            </div>
+            <li class="graph-item" graph-data-id="{{ graph.id }}">
+                <a href="#" id="loadGraphAnchor" class="link-as-text">
                     <span class="graph-index">{{ loop.index }}</span>
                     <span class="graph-name">{{ graph.name }}</span>
                 </a>
-                <button class="edit-button">Edit</button>
-                <button class="delete-button">Delete</button>
+                <button class="edit-graph-button">Edit</button>
+                <button class="delete-graph-button">Delete</button>
             </li>
         {% endfor %}
     </ul>
-    <button class="sidebar-button" id="closeButton" type="button" onclick="closePopup()"> Close</button>
+    <button class="sidebar-button" id="closeButton" type="button"> Close</button>
 </div>
