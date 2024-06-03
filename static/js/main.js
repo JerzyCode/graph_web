@@ -1,6 +1,8 @@
 import {repaint} from "./canvas.js";
 import {closePopup, openYourGraphsPopup} from "./your_graphs_popup.js";
 
+const notificationBar = document.getElementById('notification-bar')
+const progress = document.getElementById('progress-bar')
 
 const addListeners = function () {
     const loadGraphButton = document.getElementById('your-graphs-button')
@@ -26,5 +28,19 @@ const addListeners = function () {
     }
 }
 
-addListeners()
+export function showNotification(message, color) {
+    const notificationMessage = document.getElementById('notification-message');
+    notificationMessage.textContent = message;
+    progress.style.backgroundColor = color
+    notificationBar.style.border = '1px solid ' + color
+    notificationBar.classList.add('show')
+    notificationBar.style.display = 'block'
+    progress.classList.add('active')
+    setTimeout(() => {
+        notificationBar.classList.remove('show');
+        progress.classList.remove('active')
+    }, 3300);
+}
 
+
+addListeners()

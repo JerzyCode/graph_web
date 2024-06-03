@@ -1,5 +1,6 @@
 import {deleteGraph} from "./graph_service.js";
-import {clearAll} from "./canvas.js";
+import {clearAll, loadGraphOnCanvas} from "./canvas.js";
+import {showNotification} from "./main.js";
 
 
 let currentLoadedGraphId;
@@ -30,6 +31,9 @@ function setYourGraphsPopupButtons() {
     }
 
     const listItem = document.getElementsByClassName('graph-item')
+    const confirmDeleteButton = document.getElementById('confirm-delete-button')
+    const cancelDeleteButton = document.getElementById('cancel-delete-button')
+
 
     Array.from(listItem).forEach(item => {
         const graphId = item.getAttribute('graph-data-id');
@@ -42,13 +46,18 @@ function setYourGraphsPopupButtons() {
         });
 
         Array.from(deleteGraphButtons).forEach(button => {
-            setEventListenerDeleteGraphButton(button, graphId)
+            setEventListenerDeleteGraphButton(button, confirmDeleteButton, graphId)
         })
 
         Array.from(editGraphButtons).forEach(button => {
             setEventListenerEditGraphButton(button, graphId)
         })
     })
+
+
+    if (cancelDeleteButton) {
+        setEventListenerCancelDeleteButton(cancelDeleteButton)
+    }
 }
 
 function setEventListenerLoadGraphButton(button, graphId) {
@@ -58,22 +67,51 @@ function setEventListenerLoadGraphButton(button, graphId) {
     });
 }
 
-function setEventListenerDeleteGraphButton(button, graphId) {
-    button.addEventListener('click', function (event) {
+async function onLoadGraph(graphId) {
+    try {
+        await loadGraphOnCanvas(graphId);
+        currentLoadedGraphId = graphId
+        closePopup();
+    } catch (error) {
+        console.error('Error loading graph occurred:', error);
+    }
+}
+
+
+function setEventListenerDeleteGraphButton(button, confirmDeleteButton, graphId) {
+    button.addEventListener('click', function () {
+        openDeleteConfirmPopup()
+        setEventListenerConfirmDeleteButton(confirmDeleteButton, graphId)
+    });
+}
+
+function setEventListenerConfirmDeleteButton(confirmDeleteButton, graphId) {
+    confirmDeleteButton.addEventListener('click', function () {
         const deletedGraphId = deleteGraph(graphId).then(r => {
             console.log('Deleted graph with id=' + graphId)
             removeItemFromList(graphId)
+            showNotification('Successfully deleted graph!', '#4cda15')
+        }).catch(error => {
+            showNotification('Something went wrong!', '#ff0000')
+            console.log(error)
         })
+        closeDeleteConfirmPopup()
         if (deletedGraphId === currentLoadedGraphId) {
             clearAll()
             currentLoadedGraphId = null
         }
-    });
+    })
+
+}
+
+function setEventListenerCancelDeleteButton(cancelDeleteButton) {
+    cancelDeleteButton.addEventListener('click', function () {
+        closeDeleteConfirmPopup()
+    })
 }
 
 function removeItemFromList(removedGraphId) {
     const listItem = document.getElementsByClassName('graph-item')
-    console.log(listItem)
     Array.from(listItem).forEach(item => {
         const graphId = item.getAttribute('graph-data-id');
         if (removedGraphId === graphId) {
@@ -82,23 +120,22 @@ function removeItemFromList(removedGraphId) {
     })
 }
 
-function setEventListenerEditGraphButton(button, graphId) {
-    button.addEventListener('click', function (event) {
+function setEventListenerEditGraphButton(button) {
+    button.addEventListener('click', function () {
         console.log('edit')
     });
 }
 
 
-async function onLoadGraph(graphId) {
-    try {
-        await window.loadGraphOnCanvas(graphId);
-        currentLoadedGraphId = graphId
-        closePopup();
-    } catch (error) {
-        console.error('Error loading graph occurred:', error);
-    }
-}
-
 export function closePopup() {
     document.getElementById('popup-container').style.display = 'none';
+}
+
+function openDeleteConfirmPopup() {
+    document.getElementById('delete-confirm-popup').style.display = 'block'
+}
+
+
+function closeDeleteConfirmPopup() {
+    document.getElementById('delete-confirm-popup').style.display = 'none'
 }
