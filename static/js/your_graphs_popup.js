@@ -39,25 +39,22 @@ function setYourGraphsPopupButtons() {
         const graphId = item.getAttribute('graph-data-id');
         const loadGraphButtons = item.getElementsByClassName('link-as-text');
         const deleteGraphButtons = item.getElementsByClassName('delete-graph-button')
-        const editGraphButtons = item.getElementsByClassName('edit-graph-button')
 
         Array.from(loadGraphButtons).forEach(button => {
             setEventListenerLoadGraphButton(button, graphId)
         });
 
-        Array.from(deleteGraphButtons).forEach(button => {
-            setEventListenerDeleteGraphButton(button, confirmDeleteButton, graphId)
+        Array.from(deleteGraphButtons).forEach(deleteGraphButton => {
+            setEventListenerDeleteGraphButton(deleteGraphButton, confirmDeleteButton, graphId)
         })
 
-        Array.from(editGraphButtons).forEach(button => {
-            setEventListenerEditGraphButton(button, graphId)
-        })
     })
 
 
     if (cancelDeleteButton) {
-        setEventListenerCancelDeleteButton(cancelDeleteButton)
+        cancelDeleteButton.addEventListener('click', closeDeleteConfirmPopup)
     }
+
 }
 
 function setEventListenerLoadGraphButton(button, graphId) {
@@ -76,7 +73,6 @@ async function onLoadGraph(graphId) {
         console.error('Error loading graph occurred:', error);
     }
 }
-
 
 function setEventListenerDeleteGraphButton(button, confirmDeleteButton, graphId) {
     button.addEventListener('click', function () {
@@ -104,11 +100,6 @@ function setEventListenerConfirmDeleteButton(confirmDeleteButton, graphId) {
 
 }
 
-function setEventListenerCancelDeleteButton(cancelDeleteButton) {
-    cancelDeleteButton.addEventListener('click', function () {
-        closeDeleteConfirmPopup()
-    })
-}
 
 function removeItemFromList(removedGraphId) {
     const listItem = document.getElementsByClassName('graph-item')
@@ -118,12 +109,6 @@ function removeItemFromList(removedGraphId) {
             item.remove()
         }
     })
-}
-
-function setEventListenerEditGraphButton(button) {
-    button.addEventListener('click', function () {
-        console.log('edit')
-    });
 }
 
 
@@ -139,3 +124,4 @@ function openDeleteConfirmPopup() {
 function closeDeleteConfirmPopup() {
     document.getElementById('delete-confirm-popup').style.display = 'none'
 }
+
