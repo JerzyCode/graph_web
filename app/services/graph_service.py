@@ -22,7 +22,7 @@ def update_graph_name(graph_id, new_graph_name):
 
 
 def add_vertex_to_graph(graph_id, vertex_x, vertex_y):
-    vertex_service.create_vertex(x_position=vertex_x, y_position=vertex_y, graph_id=graph_id)
+    return vertex_service.create_vertex(x_position=vertex_x, y_position=vertex_y, graph_id=graph_id)
 
 
 def update_vertex_position(vertex_id, new_x_position, new_y_position):
