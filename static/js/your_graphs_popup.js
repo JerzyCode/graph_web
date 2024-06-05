@@ -1,4 +1,4 @@
-import {deleteGraph} from "./graph_service.js";
+import {deleteGraph} from "./endpoints.js";
 import {clearAll, loadGraphOnCanvas} from "./canvas.js";
 import {showNotification} from "./main.js";
 

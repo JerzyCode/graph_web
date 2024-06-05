@@ -1,5 +1,5 @@
 import {prepareEdgesToDraw, prepareVerticesToDraw} from "./canvas_utils.js";
-import {fetchGraph} from "./graph_service.js";
+import {fetchGraph} from "./endpoints.js";
 import {showAddVertexPopup} from "./main.js";
 
 const canvas = document.getElementById("canvas")
@@ -162,6 +162,8 @@ function calculateCoordsOnCanvas(event) {
 }
 
 export function addVertexOnCanvas(vertex) {
-    preparedVertices.push(vertex)
-    drawVertex(vertex)
+    let vertexMapped = {'id': parseInt(vertex.id), 'x': vertex.x, 'y': vertex.y}
+    console.log('pushing vertex' + vertexMapped)
+    preparedVertices.push(vertexMapped)
+    drawVertex(vertexMapped)
 }

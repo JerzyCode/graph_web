@@ -1,6 +1,6 @@
 import {addVertexOnCanvas, repaint} from "./canvas.js";
 import {closePopup, openYourGraphsPopup} from "./your_graphs_popup.js";
-import {createVertexEndpoint} from "./graph_service.js";
+import {createVertexEndpoint} from "./endpoints.js";
 
 const notificationBar = document.getElementById('notification-bar')
 const progress = document.getElementById('progress-bar')
@@ -68,20 +68,20 @@ export function closeAddVertexPopup() {
 }
 
 
-addListeners()
-
-
 async function addVertex() {
     let graphId = newVertex.graphId;
     let x = newVertex.x
     let y = newVertex.y
     await createVertexEndpoint(graphId, x, y)
-        .then(r => {
-            console.log('Added vertex=' + newVertex)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Added vertex=' + JSON.stringify(data))
             showNotification('Successfully added vertex!', '#4cda15')
-            addVertexOnCanvas(newVertex)
+            addVertexOnCanvas(data)
         }).catch(error => {
-            showNotification('Something went adding vertex!', '#ff0000')
+            showNotification('Something went wrong adding vertex!', '#ff0000')
             console.log(error)
         })
 }
+
+addListeners()

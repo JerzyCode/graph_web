@@ -37,3 +37,18 @@ export async function deleteGraph(graphId) {
         throw error;
     }
 }
+
+export async function createVertexEndpoint(graphId, x, y) {
+    try {
+        const response = await fetch(`/graph/vertex?graph_id=${graphId}&x=${x}&y=${y}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        return response
+    } catch (error) {
+        console.error('There was a problem with the adding vertex to graph operation:', error);
+        throw error;
+    }
+}
