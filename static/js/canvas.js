@@ -1,5 +1,6 @@
 import {prepareEdgesToDraw, prepareVerticesToDraw} from "./canvas_utils.js";
 import {fetchGraph} from "./graph_service.js";
+import {showAddVertexPopup} from "./main.js";
 
 const canvas = document.getElementById("canvas")
 const container = document.getElementById("canvas-container")
@@ -25,6 +26,7 @@ canvas.onmousedown = handleMouseDown
 canvas.onmouseup = handleStopDragging
 canvas.onmouseout = handleStopDragging
 canvas.onmousemove = handleMouseMove
+canvas.oncontextmenu = handleRightClick
 
 window.addEventListener('resize', repaint)
 
@@ -55,11 +57,9 @@ function handleMouseDown(event) {
 }
 
 function isVertexPressed(event, path) {
-    let rect = canvas.getBoundingClientRect()
-    let x_canvas = event.x - rect.left
-    let y_canvas = event.y - rect.top
-    const dx = x_canvas - path.x
-    const dy = y_canvas - path.y
+    let canvasCoords = calculateCoordsOnCanvas(event)
+    const dx = canvasCoords.x - path.x
+    const dy = canvasCoords.y - path.y
     return dx * dx + dy * dy <= VERTEX_RADIUS * VERTEX_RADIUS
 }
 
@@ -73,18 +73,31 @@ function handleStopDragging(event) {
 }
 
 function handleMouseMove(event) {
-    let rect = canvas.getBoundingClientRect()
-    let x_canvas = event.x - rect.left
-    let y_canvas = event.y - rect.top
+    let canvasCoords = calculateCoordsOnCanvas(event)
     if (isDragging) {
-        if (x_canvas < VERTEX_RADIUS || x_canvas > canvas.width - VERTEX_RADIUS ||
-            y_canvas < VERTEX_RADIUS || y_canvas > canvas.height - VERTEX_RADIUS) {
+        if (canvasCoords.x < VERTEX_RADIUS || canvasCoords.x > canvas.width - VERTEX_RADIUS ||
+            canvasCoords.y < VERTEX_RADIUS || canvasCoords.y > canvas.height - VERTEX_RADIUS) {
             return
         }
-        currentVertex.x = x_canvas
-        currentVertex.y = y_canvas
+        currentVertex.x = canvasCoords.x
+        currentVertex.y = canvasCoords.y
         repaint()
     }
+}
+
+function handleRightClick(event) {
+    event.preventDefault()
+    if (graph == null) {
+        return
+    }
+    let canvasCoords = calculateCoordsOnCanvas(event)
+    console.log(canvasCoords)
+
+    let vertexParams = {'graphId': graph.id, 'x': canvasCoords.x, 'y': canvasCoords.y}
+    showAddVertexPopup(event.x, event.y, vertexParams)
+
+
+    //TODO dodac ze dodany wierzchołek zwróci go z id
 }
 
 export function repaint() {
@@ -139,4 +152,16 @@ export function clearAll() {
 function redrawGraph() {
     clearAll()
     drawAll()
+}
+
+function calculateCoordsOnCanvas(event) {
+    let rect = canvas.getBoundingClientRect()
+    let x_canvas = event.x - rect.left
+    let y_canvas = event.y - rect.top
+    return {'x': x_canvas, 'y': y_canvas}
+}
+
+export function addVertexOnCanvas(vertex) {
+    preparedVertices.push(vertex)
+    drawVertex(vertex)
 }

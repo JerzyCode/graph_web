@@ -1,14 +1,25 @@
-import {repaint} from "./canvas.js";
+import {addVertexOnCanvas, repaint} from "./canvas.js";
 import {closePopup, openYourGraphsPopup} from "./your_graphs_popup.js";
+import {createVertexEndpoint} from "./graph_service.js";
 
 const notificationBar = document.getElementById('notification-bar')
 const progress = document.getElementById('progress-bar')
 
+const addVertexPopup = document.getElementById('add-vertex-popup')
+const addVertexButton = document.getElementById('add-vertex-button')
+
+let newVertex = null
 const addListeners = function () {
     const loadGraphButton = document.getElementById('your-graphs-button')
     if (loadGraphButton) {
         loadGraphButton.addEventListener('click', openYourGraphsPopup)
     }
+
+    if (addVertexButton) {
+        addVertexButton.addEventListener('click', addVertex)
+    }
+
+    window.addEventListener('click', closeAddVertexPopup)
 
     window.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
@@ -42,5 +53,35 @@ export function showNotification(message, color) {
     }, 3300);
 }
 
+export function showAddVertexPopup(xPos, yPos, vertexParams) {
+    addVertexPopup.style.left = xPos + 'px'
+    addVertexPopup.style.top = yPos + 'px'
+    newVertex = vertexParams
+    console.log(xPos, yPos)
+    console.log(vertexParams)
+    addVertexPopup.style.display = 'block';
+}
+
+
+export function closeAddVertexPopup() {
+    addVertexPopup.style.display = 'none';
+}
+
 
 addListeners()
+
+
+async function addVertex() {
+    let graphId = newVertex.graphId;
+    let x = newVertex.x
+    let y = newVertex.y
+    await createVertexEndpoint(graphId, x, y)
+        .then(r => {
+            console.log('Added vertex=' + newVertex)
+            showNotification('Successfully added vertex!', '#4cda15')
+            addVertexOnCanvas(newVertex)
+        }).catch(error => {
+            showNotification('Something went adding vertex!', '#ff0000')
+            console.log(error)
+        })
+}

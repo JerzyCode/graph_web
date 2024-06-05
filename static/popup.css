@@ -104,11 +104,15 @@
 .cancel-delete-button {
     font-weight: bold;
     background-color: #ff0000;
+    width: 40%;
+    margin-left: auto;
 }
 
 .confirm-delete-button {
     font-weight: bold;
     background-color: #4cda15;
+    margin-right: auto;
+    width: 40%;
 }
 
 
@@ -116,16 +120,6 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-}
-
-.confirm-delete-button {
-    margin-right: auto;
-    width: 40%;
-}
-
-.cancel-delete-button {
-    width: 40%;
-    margin-left: auto;
 }
 
 .delete-confirm {
