@@ -17,7 +17,7 @@ export async function fetchGraph(graphId) {
     }
 }
 
-export async function deleteGraph(graphId) {
+export async function deleteGraphEndpoint(graphId) {
     try {
         const response = await fetch('/graph?graph_id=' + graphId, {
             method: 'DELETE',

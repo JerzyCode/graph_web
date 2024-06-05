@@ -1,7 +1,7 @@
 import {fetchGraph} from "./endpoints.js";
 import {showAddVertexPopup} from "./main.js";
 import {prepareEdgesToDraw} from "./canvas_utils.js";
-import {addVertexParams} from "./add_elements_service.js";
+import {addVertexParams} from "./modify_graph_service.js";
 
 const canvas = document.getElementById("canvas")
 const container = document.getElementById("canvas-container")

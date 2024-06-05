@@ -1,6 +1,6 @@
 import {repaint} from "./canvas.js";
 import {closePopup, openYourGraphsPopup} from "./your_graphs_popup.js";
-import {addVertex} from "./add_elements_service.js";
+import {addVertex} from "./modify_graph_service.js";
 
 const notificationBar = document.getElementById('notification-bar')
 const progress = document.getElementById('progress-bar')

@@ -1,9 +1,7 @@
-import {deleteGraph} from "./endpoints.js";
-import {clearAll, loadGraphOnCanvas} from "./canvas.js";
-import {showFailMessage, showSuccessMessage} from "./main.js";
+import {loadGraphOnCanvas} from "./canvas.js";
+import {showSuccessMessage} from "./main.js";
+import {currentLoadedGraph, deleteGraph} from "./modify_graph_service.js";
 
-
-let currentLoadedGraphId;
 
 export function openYourGraphsPopup() {
     loadYourGraphsPopup().catch(() => console.log('cant open popup'))
@@ -60,14 +58,16 @@ function setYourGraphsPopupButtons() {
 function setEventListenerLoadGraphButton(button, graphId) {
     button.addEventListener('click', function (event) {
         event.preventDefault();
-        onLoadGraph(graphId).then(r => showSuccessMessage('Loaded graph!'))
+        onLoadGraph(graphId).then(r => {
+            showSuccessMessage('Loaded graph!')
+        })
     });
 }
 
 async function onLoadGraph(graphId) {
     try {
         await loadGraphOnCanvas(graphId);
-        currentLoadedGraphId = graphId
+        currentLoadedGraph.graphId = graphId
         closePopup();
     } catch (error) {
         console.error('Error loading graph occurred:', error);
@@ -83,25 +83,12 @@ function setEventListenerDeleteGraphButton(button, confirmDeleteButton, graphId)
 
 function setEventListenerConfirmDeleteButton(confirmDeleteButton, graphId) {
     confirmDeleteButton.addEventListener('click', function () {
-        const deletedGraphId = deleteGraph(graphId).then(r => {
-            console.log('Deleted graph with id=' + graphId)
-            removeItemFromList(graphId)
-            showSuccessMessage('Successfully deleted graph!')
-        }).catch(error => {
-            showFailMessage('Something went wrong!')
-            console.log(error)
-        })
-        closeDeleteConfirmPopup()
-        if (deletedGraphId === currentLoadedGraphId) {
-            clearAll()
-            currentLoadedGraphId = null
-        }
+        deleteGraph(graphId)
     })
-
 }
 
 
-function removeItemFromList(removedGraphId) {
+export function removeItemFromList(removedGraphId) {
     const listItem = document.getElementsByClassName('graph-item')
     Array.from(listItem).forEach(item => {
         const graphId = item.getAttribute('graph-data-id');
@@ -121,7 +108,7 @@ function openDeleteConfirmPopup() {
 }
 
 
-function closeDeleteConfirmPopup() {
+export function closeDeleteConfirmPopup() {
     document.getElementById('delete-confirm-popup').style.display = 'none'
 }
 
