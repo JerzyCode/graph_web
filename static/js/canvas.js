@@ -1,6 +1,7 @@
-import {prepareEdgesToDraw, prepareVerticesToDraw} from "./canvas_utils.js";
 import {fetchGraph} from "./endpoints.js";
 import {showAddVertexPopup} from "./main.js";
+import {prepareEdgesToDraw} from "./canvas_utils.js";
+import {addVertexParams} from "./add_elements_service.js";
 
 const canvas = document.getElementById("canvas")
 const container = document.getElementById("canvas-container")
@@ -9,12 +10,13 @@ const ctx = canvas.getContext('2d')
 const VERTEX_BORDER_COLOR = 'purple'
 const VERTEX_FILL_COLOR = 'yellow'
 const VERTEX_RADIUS = 10
+const EDGE_WIDTH = 2
 const EDGE_COLOR = 'purple'
 
 
 let graph
-let vertices
-let edges
+let vertices = []
+let edges = []
 let currentVertex = null
 let isDragging = false
 
@@ -30,23 +32,20 @@ canvas.oncontextmenu = handleRightClick
 
 window.addEventListener('resize', repaint)
 
-let preparedVertices = []
-let preparedEdges = []
 
-
-export async function loadGraphOnCanvas(graph_id) {
-    graph = await fetchGraph(graph_id)
+export async function loadGraphOnCanvas(graphId) {
+    const graphJson = await fetchGraph(graphId);
+    graph = JSON.parse(graphJson);
+    console.log(`loadGraphOnCanvas(), graphId=${graphId}`)
     vertices = graph.vertices
-    edges = graph.edges
-    preparedVertices = prepareVerticesToDraw(vertices)
-    preparedEdges = prepareEdgesToDraw(edges, preparedVertices)
+    edges = prepareEdgesToDraw(graph.edges, vertices)
     redrawGraph()
 }
 
 
 function handleMouseDown(event) {
     event.preventDefault()
-    for (let path of preparedVertices) {
+    for (let path of vertices) {
         if (isVertexPressed(event, path)) {
             currentVertex = path
             isDragging = true
@@ -91,23 +90,22 @@ function handleRightClick(event) {
         return
     }
     let canvasCoords = calculateCoordsOnCanvas(event)
-    console.log(canvasCoords)
+    console.log(`pressed RightClick on coords: ${canvasCoords.x}, ${canvasCoords.y}`)
+    addVertexParams.graph_id = graph.id
+    addVertexParams.x = canvasCoords.x
+    addVertexParams.y = canvasCoords.y
+    showAddVertexPopup(event.x, event.y)
 
-    let vertexParams = {'graphId': graph.id, 'x': canvasCoords.x, 'y': canvasCoords.y}
-    showAddVertexPopup(event.x, event.y, vertexParams)
-
-
-    //TODO dodac ze dodany wierzchołek zwróci go z id
 }
 
 export function repaint() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    clearAll()
     drawAllEdges()
     drawAllVertices()
 }
 
 function drawAllVertices() {
-    for (let vertex of preparedVertices) {
+    for (let vertex of vertices) {
         drawVertex(vertex)
     }
 }
@@ -115,7 +113,7 @@ function drawAllVertices() {
 function drawVertex(vertex) {
     ctx.fillStyle = VERTEX_FILL_COLOR
     ctx.strokeStyle = VERTEX_BORDER_COLOR
-    ctx.lineWidth = 2
+    ctx.lineWidth = EDGE_WIDTH
     ctx.beginPath()
     ctx.arc(vertex.x, vertex.y, VERTEX_RADIUS, 0, Math.PI * 2)
     ctx.fill()
@@ -125,16 +123,16 @@ function drawVertex(vertex) {
 
 function drawEdge(edge) {
     ctx.strokeStyle = EDGE_COLOR
-    ctx.lineWidth = 2
+    ctx.lineWidth = EDGE_WIDTH
     ctx.beginPath()
-    ctx.moveTo(edge.vertexIn.x, edge.vertexIn.y)
-    ctx.lineTo(edge.vertexOut.x, edge.vertexOut.y)
+    ctx.moveTo(edge.vertex_in.x, edge.vertex_in.y)
+    ctx.lineTo(edge.vertex_out.x, edge.vertex_out.y)
     ctx.stroke()
     ctx.closePath()
 }
 
 function drawAllEdges() {
-    for (let edge of preparedEdges) {
+    for (let edge of edges) {
         drawEdge(edge)
     }
 }
@@ -162,8 +160,7 @@ function calculateCoordsOnCanvas(event) {
 }
 
 export function addVertexOnCanvas(vertex) {
-    let vertexMapped = {'id': parseInt(vertex.id), 'x': vertex.x, 'y': vertex.y}
-    console.log('pushing vertex' + vertexMapped)
-    preparedVertices.push(vertexMapped)
-    drawVertex(vertexMapped)
+    console.debug(`addVertexOnCanvas(), vertex=${JSON.stringify(vertex)}`)
+    vertices.push(vertex)
+    drawVertex(vertex)
 }

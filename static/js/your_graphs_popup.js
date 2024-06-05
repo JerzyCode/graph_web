@@ -1,6 +1,6 @@
 import {deleteGraph} from "./endpoints.js";
 import {clearAll, loadGraphOnCanvas} from "./canvas.js";
-import {showNotification} from "./main.js";
+import {showFailMessage, showSuccessMessage} from "./main.js";
 
 
 let currentLoadedGraphId;
@@ -60,7 +60,7 @@ function setYourGraphsPopupButtons() {
 function setEventListenerLoadGraphButton(button, graphId) {
     button.addEventListener('click', function (event) {
         event.preventDefault();
-        onLoadGraph(graphId).then(r => console.log('Loaded Graph with id:' + graphId))
+        onLoadGraph(graphId).then(r => showSuccessMessage('Loaded graph!'))
     });
 }
 
@@ -86,9 +86,9 @@ function setEventListenerConfirmDeleteButton(confirmDeleteButton, graphId) {
         const deletedGraphId = deleteGraph(graphId).then(r => {
             console.log('Deleted graph with id=' + graphId)
             removeItemFromList(graphId)
-            showNotification('Successfully deleted graph!', '#4cda15')
+            showSuccessMessage('Successfully deleted graph!')
         }).catch(error => {
-            showNotification('Something went wrong!', '#ff0000')
+            showFailMessage('Something went wrong!')
             console.log(error)
         })
         closeDeleteConfirmPopup()

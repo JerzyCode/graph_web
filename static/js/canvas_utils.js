@@ -1,22 +1,3 @@
-const VERTEX_RADIUS = 10
-
-export function prepareVerticesToDraw(vertices) {
-    let preparedVertices = []
-    vertices.forEach(vertex => {
-        let preparedVertex = prepareVertexToDraw(vertex)
-        preparedVertices.push(preparedVertex)
-    })
-    return preparedVertices
-}
-
-function prepareVertexToDraw(vertex) {
-    let preparedVertex = {}
-    preparedVertex.id = vertex.id
-    preparedVertex.x = vertex.x
-    preparedVertex.y = vertex.y
-    return preparedVertex
-}
-
 export function prepareEdgesToDraw(edges, preparedVertices) {
     let preparedEdges = []
     edges.forEach(edge => {
@@ -30,8 +11,8 @@ function prepareEdgeToDraw(edge, preparedVertices) {
     let preparedEdge = {}
     let preparedVerticesForEdge = findPreparedVerticesForEdge(edge, preparedVertices)
     preparedEdge.id = edge.id
-    preparedEdge.vertexIn = preparedVerticesForEdge.vertexIn
-    preparedEdge.vertexOut = preparedVerticesForEdge.vertexOut
+    preparedEdge.vertex_in = preparedVerticesForEdge.vertex_in
+    preparedEdge.vertex_out = preparedVerticesForEdge.vertex_out
     return preparedEdge
 }
 
@@ -39,9 +20,9 @@ function findPreparedVerticesForEdge(edge, preparedVertices) {
     let verticesForEdge = {}
     preparedVertices.forEach(vertex => {
         if (vertex.id === edge.vertex_in.id)
-            verticesForEdge.vertexIn = vertex
+            verticesForEdge.vertex_in = vertex
         if (vertex.id === edge.vertex_out.id)
-            verticesForEdge.vertexOut = vertex
+            verticesForEdge.vertex_out = vertex
     })
     return verticesForEdge
 }
