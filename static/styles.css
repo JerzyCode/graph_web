@@ -86,6 +86,7 @@ canvas {
 }
 
 .sidebar-button {
+    white-space: nowrap;
     display: block;
     margin-top: 5px;
     background-color: #272640;
@@ -179,13 +180,13 @@ canvas {
     }
 }
 
-.add-vertex-popup {
+.on-canvas-popup {
     display: none;
     position: absolute;
     z-index: 10000;
 }
 
-.add-vertex-popup .sidebar-button {
+.on-canvas-popup .sidebar-button {
     text-align: left;
     text-wrap: none;
     width: 85px;
@@ -193,9 +194,13 @@ canvas {
     font-size: 15px;
 }
 
-.add-vertex-popup .sidebar-button:hover {
+.on-canvas-popup .sidebar-button:hover {
     text-wrap: none;
-    width: 88px;
     height: 30px;
     font-size: 15px;
+}
+
+
+.graph-actions-popup .sidebar-button {
+    width: 100px;
 }

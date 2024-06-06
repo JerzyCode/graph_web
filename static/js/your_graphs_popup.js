@@ -25,7 +25,7 @@ async function loadYourGraphsPopup() {
 function setYourGraphsPopupButtons() {
     const closeButton = document.getElementById('closeButton')
     if (closeButton) {
-        closeButton.addEventListener('click', closePopup)
+        closeButton.addEventListener('click', closeYourGraphsPopup)
     }
 
     const listItem = document.getElementsByClassName('graph-item')
@@ -68,7 +68,7 @@ async function onLoadGraph(graphId) {
     try {
         await loadGraphOnCanvas(graphId);
         currentLoadedGraph.graphId = graphId
-        closePopup();
+        closeYourGraphsPopup();
     } catch (error) {
         console.error('Error loading graph occurred:', error);
     }
@@ -99,7 +99,7 @@ export function removeItemFromList(removedGraphId) {
 }
 
 
-export function closePopup() {
+export function closeYourGraphsPopup() {
     document.getElementById('popup-container').style.display = 'none';
 }
 

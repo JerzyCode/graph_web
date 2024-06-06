@@ -1,5 +1,5 @@
 import {repaint} from "./canvas.js";
-import {closePopup, openYourGraphsPopup} from "./your_graphs_popup.js";
+import {openYourGraphsPopup} from "./your_graphs_popup.js";
 import {addVertex} from "./modify_graph_service.js";
 
 const notificationBar = document.getElementById('notification-bar')
@@ -8,6 +8,9 @@ const progress = document.getElementById('progress-bar')
 const addVertexPopup = document.getElementById('add-vertex-popup')
 const addVertexButton = document.getElementById('add-vertex-button')
 
+const graphActionsPopup = document.getElementById('graph-actions-popup')
+
+let isShowedNotification = false
 const addListeners = function () {
     const loadGraphButton = document.getElementById('your-graphs-button')
     if (loadGraphButton) {
@@ -18,7 +21,10 @@ const addListeners = function () {
         addVertexButton.addEventListener('click', addVertex)
     }
 
-    window.addEventListener('click', closeAddVertexPopup)
+    window.addEventListener('click', () => {
+        closeAddVertexPopup()
+        closeGraphActionsPopup()
+    })
     window.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
             closePopup()
@@ -37,7 +43,12 @@ const addListeners = function () {
     }
 }
 
+//TODO notification zeby nie bylo kilka na raz
 function showNotification(message, color) {
+    if (isShowedNotification) {
+        return
+    }
+    isShowedNotification = true
     const notificationMessage = document.getElementById('notification-message');
     notificationMessage.textContent = message;
     progress.style.backgroundColor = color
@@ -48,6 +59,7 @@ function showNotification(message, color) {
     setTimeout(() => {
         notificationBar.classList.remove('show');
         progress.classList.remove('active')
+        isShowedNotification = false
     }, 3300);
 }
 
@@ -59,15 +71,34 @@ export function showFailMessage(message) {
     showNotification(message, '#ff0000')
 }
 
+
 export function showAddVertexPopup(xPos, yPos) {
-    addVertexPopup.style.left = xPos + 'px'
-    addVertexPopup.style.top = yPos + 'px'
-    addVertexPopup.style.display = 'block';
+    showPopup(addVertexPopup, xPos, yPos)
 }
 
 
 export function closeAddVertexPopup() {
-    addVertexPopup.style.display = 'none';
+    closePopup(addVertexPopup)
+}
+
+export function showGraphActionsPopup(xPos, yPos) {
+    showPopup(graphActionsPopup, xPos, yPos)
+}
+
+
+export function closeGraphActionsPopup() {
+    closePopup(graphActionsPopup)
+}
+
+
+function showPopup(popup, xPos, yPos) {
+    popup.style.left = xPos + 'px'
+    popup.style.top = yPos + 'px'
+    popup.style.display = 'block';
+}
+
+function closePopup(popup) {
+    popup.style.display = 'none';
 }
 
 addListeners()

@@ -14,7 +14,7 @@ export async function addVertex() {
     await createVertexEndpoint(graphId, x, y)
         .then(vertex => {
             const json = JSON.parse(vertex);
-            console.log('Added vertex=' + json)
+            console.log('Added vertex=' + vertex)
             showSuccessMessage('Successfully added vertex!')
             addVertexOnCanvas(json)
         }).catch(error => {
