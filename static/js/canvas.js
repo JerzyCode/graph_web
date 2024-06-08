@@ -1,7 +1,7 @@
 import {fetchGraph} from "./endpoints.js";
 import {showAddVertexPopup, showGraphActionsPopup} from "./main.js";
 import {prepareEdgesToDraw} from "./canvas_utils.js";
-import {addVertexParams} from "./modify_graph_service.js";
+import {addVertexParams, deleteVertexParams} from "./modify_graph_service.js";
 
 const canvas = document.getElementById("canvas")
 const container = document.getElementById("canvas-container")
@@ -40,6 +40,7 @@ export async function loadGraphOnCanvas(graphId) {
     graph = JSON.parse(graphJson);
     console.log(`loadGraphOnCanvas(), graphId=${graphId}`)
     vertices = graph.vertices
+    console.log(JSON.stringify(vertices))
     edges = prepareEdgesToDraw(graph.edges, vertices)
     mapVerticesColor()
     redrawGraph()
@@ -121,20 +122,23 @@ function handleRightClick(event) {
     let canvasCoords = calculateCoordsOnCanvas(event)
     console.log(`pressed RightClick on coords: ${canvasCoords.x}, ${canvasCoords.y}`)
 
-    if (isAnyVertexPressed(event)) {
+    let pressedVertex = returnPressedVertex(event)
+    if (pressedVertex != null) {
         onCanvasShowGraphActionsPopup(canvasCoords, event)
+        deleteVertexParams.graphId = graph.id
+        deleteVertexParams.vertexId = pressedVertex.id
     } else {
         onCanvasShowAddVertexPopup(canvasCoords, event)
     }
 }
 
-function isAnyVertexPressed(event) {
+function returnPressedVertex(event) {
     for (let vertex of vertices) {
         if (isVertexPressed(event, vertex)) {
-            return true
+            return vertex
         }
     }
-    return false
+    return null
 }
 
 function onCanvasShowGraphActionsPopup(canvasCoords, event) {
@@ -219,4 +223,9 @@ export function addVertexOnCanvas(vertex) {
     vertices.push(vertex)
     verticesColor.set(vertex.id, VERTEX_FILL_COLOR)
     drawVertex(vertex)
+}
+
+export function deleteVertexOnCanvas(vertexId) {
+    vertices = vertices.filter(vertex => vertex.id !== vertexId);
+    repaint()
 }

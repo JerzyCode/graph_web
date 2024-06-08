@@ -1,10 +1,11 @@
-import {createVertexEndpoint, deleteGraphEndpoint} from "./endpoints.js";
-import {addVertexOnCanvas, clearAll} from "./canvas.js";
+import {createVertexEndpoint, deleteGraphEndpoint, deleteVertexEndpoint} from "./endpoints.js";
+import {addVertexOnCanvas, clearAll, deleteVertexOnCanvas} from "./canvas.js";
 import {showFailMessage, showSuccessMessage} from "./main.js";
 import {closeDeleteConfirmPopup, removeItemFromList} from "./your_graphs_popup.js";
 
 
 export const addVertexParams = {}
+export const deleteVertexParams = {}
 export const currentLoadedGraph = {}
 
 export async function addVertex() {
@@ -19,6 +20,20 @@ export async function addVertex() {
             addVertexOnCanvas(json)
         }).catch(error => {
             showFailMessage('Something went wrong adding vertex!')
+            console.log(error)
+        })
+}
+
+export async function deleteVertex() {
+    let graphId = deleteVertexParams.graphId
+    let vertexId = deleteVertexParams.vertexId
+    await deleteVertexEndpoint(graphId, vertexId)
+        .then(() => {
+            console.log(`Delete vertex: graph_id=${graphId}, vertex_id=${vertexId}`)
+            showSuccessMessage('Successfully deleted vertex!')
+            deleteVertexOnCanvas(vertexId)
+        }).catch(error => {
+            showFailMessage('Something went wrong deleting vertex!')
             console.log(error)
         })
 }

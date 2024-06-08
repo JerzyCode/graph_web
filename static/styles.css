@@ -200,7 +200,15 @@ canvas {
     font-size: 15px;
 }
 
+.graph-actions-popup {
+    border: 2px solid #2dcebc;
+    border-radius: 10px;
+    background-color: #006466;
+    width: 150px;
+}
+
 
 .graph-actions-popup .sidebar-button {
-    width: 100px;
+    width: 100%;
+    text-align: center;
 }

@@ -45,3 +45,17 @@ export async function createVertexEndpoint(graphId, x, y) {
         throw error;
     }
 }
+
+export async function deleteVertexEndpoint(graphId, vertexId) {
+    try {
+        const response = await fetch(`/graph/vertex?graph_id=${graphId}&vertex_id=${vertexId}`, {
+            method: 'DELETE'
+        })
+        if (response.ok) {
+            return await graphId
+        }
+    } catch (error) {
+        console.error('There was a problem with the deleting vertex operation:', error);
+        throw error;
+    }
+}

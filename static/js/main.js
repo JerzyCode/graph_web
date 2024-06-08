@@ -1,12 +1,14 @@
 import {repaint} from "./canvas.js";
 import {openYourGraphsPopup} from "./your_graphs_popup.js";
-import {addVertex} from "./modify_graph_service.js";
+import {addVertex, deleteVertex} from "./modify_graph_service.js";
 
 const notificationBar = document.getElementById('notification-bar')
 const progress = document.getElementById('progress-bar')
 
 const addVertexPopup = document.getElementById('add-vertex-popup')
 const addVertexButton = document.getElementById('add-vertex-button')
+
+const deleteVertexButton = document.getElementById('delete-vertex-button')
 
 const graphActionsPopup = document.getElementById('graph-actions-popup')
 
@@ -19,6 +21,10 @@ const addListeners = function () {
 
     if (addVertexButton) {
         addVertexButton.addEventListener('click', addVertex)
+    }
+
+    if (deleteVertexButton) {
+        deleteVertexButton.addEventListener('click', deleteVertex)
     }
 
     window.addEventListener('click', () => {
