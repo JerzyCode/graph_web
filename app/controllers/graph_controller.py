@@ -50,7 +50,6 @@ class GraphController:
             return 'No graph_id, x or y provided', 400
         else:
             created_vertex = self._service.add_vertex_to_graph(graph_id=graph_id, vertex_x=vertex_x, vertex_y=vertex_y)
-            print('createdVertex' + str(created_vertex))
             return jsonify(created_vertex.to_dict()), 200
 
     def handle_delete_vertex_request(self, req):
