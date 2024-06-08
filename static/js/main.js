@@ -1,12 +1,14 @@
 import {repaint} from "./canvas.js";
 import {openYourGraphsPopup} from "./your_graphs_popup.js";
-import {addVertex, deleteVertex} from "./modify_graph_service.js";
+import {addVertex, deleteVertex, selectToEdge} from "./modify_graph_service.js";
 
 const notificationBar = document.getElementById('notification-bar')
 const progress = document.getElementById('progress-bar')
 
 const addVertexPopup = document.getElementById('add-vertex-popup')
 const addVertexButton = document.getElementById('add-vertex-button')
+
+const selectEdgeButton = document.getElementById('select-to-edge-button')
 
 const deleteVertexButton = document.getElementById('delete-vertex-button')
 
@@ -25,6 +27,10 @@ const addListeners = function () {
 
     if (deleteVertexButton) {
         deleteVertexButton.addEventListener('click', deleteVertex)
+    }
+
+    if (selectEdgeButton) {
+        selectEdgeButton.addEventListener('click', selectToEdge)
     }
 
     window.addEventListener('click', () => {

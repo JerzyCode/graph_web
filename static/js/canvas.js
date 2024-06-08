@@ -1,7 +1,7 @@
 import {fetchGraph} from "./endpoints.js";
 import {showAddVertexPopup, showGraphActionsPopup} from "./main.js";
-import {prepareEdgesToDraw} from "./canvas_utils.js";
-import {addVertexParams, deleteVertexParams} from "./modify_graph_service.js";
+import {prepareEdgesToDraw, prepareEdgeToDraw} from "./canvas_utils.js";
+import {addEdgeParams, addVertexParams, deleteVertexParams, selectedVertexId} from "./modify_graph_service.js";
 
 const canvas = document.getElementById("canvas")
 const container = document.getElementById("canvas-container")
@@ -10,6 +10,7 @@ const ctx = canvas.getContext('2d')
 const VERTEX_BORDER_COLOR = 'purple'
 const VERTEX_FILL_COLOR = 'yellow'
 const VERTEX_REPAINT_COLOR = 'orange'
+const VERTEX_TO_EDGE_COLOR = ' red'
 const VERTEX_RADIUS = 10
 const EDGE_WIDTH = 2
 const EDGE_COLOR = 'purple'
@@ -21,6 +22,7 @@ let verticesColor = new Map()
 let edges = []
 let currentVertex = null
 let isDragging = false
+let selectedVertices = []
 
 canvas.width = container.clientWidth
 canvas.height = container.clientHeight
@@ -38,7 +40,7 @@ window.addEventListener('resize', repaint)
 export async function loadGraphOnCanvas(graphId) {
     const graphJson = await fetchGraph(graphId);
     graph = JSON.parse(graphJson);
-    console.log(`loadGraphOnCanvas(), graphId=${graphId}`)
+    console.debug(`loadGraphOnCanvas(), graphId=${graphId}`)
     vertices = graph.vertices
     edges = prepareEdgesToDraw(graph.edges, vertices)
     mapVerticesColor()
@@ -103,14 +105,30 @@ function handleMouseMove(event) {
 
 function mouseOnVertexEvent(event) {
     for (let vertex of vertices) {
+        let isSelected = isVertexSelected(vertex)
         if (isVertexPressed(event, vertex)) {
-            verticesColor.set(vertex.id, VERTEX_REPAINT_COLOR)
+            if (!isSelected) {
+                verticesColor.set(vertex.id, VERTEX_REPAINT_COLOR)
+            }
             canvas.style.cursor = 'pointer'
+        } else if (isSelected) {
+            //no change color for selected
         } else {
             verticesColor.set(vertex.id, VERTEX_FILL_COLOR)
         }
-        repaint()
+
+
     }
+    repaint()
+}
+
+function isVertexSelected(vertex) {
+    for (let selected of selectedVertices) {
+        if (selected === vertex.id) {
+            return true
+        }
+    }
+    return false
 }
 
 function handleRightClick(event) {
@@ -119,16 +137,22 @@ function handleRightClick(event) {
         return
     }
     let canvasCoords = calculateCoordsOnCanvas(event)
-    console.log(`pressed RightClick on coords: ${canvasCoords.x}, ${canvasCoords.y}`)
+    console.debug(`pressed RightClick() on coords: ${canvasCoords.x}, ${canvasCoords.y}`)
 
     let pressedVertex = returnPressedVertex(event)
     if (pressedVertex != null) {
         onCanvasShowGraphActionsPopup(canvasCoords, event)
-        deleteVertexParams.graphId = graph.id
-        deleteVertexParams.vertexId = pressedVertex.id
+        setGraphOptionsParams(pressedVertex)
     } else {
         onCanvasShowAddVertexPopup(canvasCoords, event)
     }
+}
+
+function setGraphOptionsParams(pressedVertex) {
+    deleteVertexParams.graphId = graph.id
+    deleteVertexParams.vertexId = pressedVertex.id
+    selectedVertexId.vertexId = pressedVertex.id
+    addEdgeParams.graphId = graph.id
 }
 
 function returnPressedVertex(event) {
@@ -179,7 +203,7 @@ function drawVertex(vertex) {
     drawVertexSetColor(vertex, verticesColor.get(vertex.id))
 }
 
-function drawEdge(edge) {
+export function drawEdge(edge) {
     ctx.strokeStyle = EDGE_COLOR
     ctx.lineWidth = EDGE_WIDTH
     ctx.beginPath()
@@ -217,6 +241,12 @@ function calculateCoordsOnCanvas(event) {
     return {'x': x_canvas, 'y': y_canvas}
 }
 
+export function addEdgeOnCanvas(edge) {
+    let preparedEdge = prepareEdgeToDraw(edge, vertices)
+    edges.push(preparedEdge)
+}
+
+
 export function addVertexOnCanvas(vertex) {
     console.debug(`addVertexOnCanvas(), vertex=${JSON.stringify(vertex)}`)
     vertices.push(vertex)
@@ -227,4 +257,23 @@ export function addVertexOnCanvas(vertex) {
 export function deleteVertexOnCanvas(vertexId) {
     vertices = vertices.filter(vertex => vertex.id !== vertexId);
     repaint()
+}
+
+export function markVertexSelected(vertexId) {
+    verticesColor.set(vertexId, VERTEX_TO_EDGE_COLOR)
+    selectedVertices.push(vertexId)
+    repaint()
+}
+
+export function backVertexBgToDefault(vertexId) {
+    verticesColor.set(vertexId, VERTEX_FILL_COLOR)
+    redrawGraph()
+}
+
+
+export function unmarkSelectedVertices() {
+    for (let selected of selectedVertices) {
+        backVertexBgToDefault(selected)
+    }
+    selectedVertices = []
 }

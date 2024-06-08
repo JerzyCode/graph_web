@@ -78,8 +78,8 @@ class GraphController:
         if graph_id is None or vertex_in_id is None or vertex_out_id is None:
             return 'No graph_id, vertex_out_id vertex_in_id y provided', 400
         else:
-            self._service.add_edge_to_graph(graph_id=graph_id, vertex_in_id=vertex_in_id, vertex_out_id=vertex_out_id)
-            return 'Added edge', 200
+            created_edge = self._service.add_edge_to_graph(graph_id=graph_id, vertex_in_id=vertex_in_id, vertex_out_id=vertex_out_id)
+            return jsonify(created_edge.to_dict()), 200
 
     def handle_delete_edge_request(self, req):
         edge_id = req.args.get('edge_id')

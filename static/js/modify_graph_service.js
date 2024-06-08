@@ -1,5 +1,5 @@
-import {createVertexEndpoint, deleteGraphEndpoint, deleteVertexEndpoint} from "./endpoints.js";
-import {addVertexOnCanvas, clearAll, deleteVertexOnCanvas} from "./canvas.js";
+import {addEdgeEndpoint, createVertexEndpoint, deleteGraphEndpoint, deleteVertexEndpoint} from "./endpoints.js";
+import {addEdgeOnCanvas, addVertexOnCanvas, clearAll, deleteVertexOnCanvas, markVertexSelected, repaint, unmarkSelectedVertices} from "./canvas.js";
 import {showFailMessage, showSuccessMessage} from "./main.js";
 import {closeDeleteConfirmPopup, removeItemFromList} from "./your_graphs_popup.js";
 
@@ -7,6 +7,13 @@ import {closeDeleteConfirmPopup, removeItemFromList} from "./your_graphs_popup.j
 export const addVertexParams = {}
 export const deleteVertexParams = {}
 export const currentLoadedGraph = {}
+export const selectedVertexId = {}
+
+export const addEdgeParams = {
+    graphId: null,
+    vertexInId: null,
+    vertexOutId: null
+};
 
 export async function addVertex() {
     let graphId = currentLoadedGraph.graphId
@@ -15,7 +22,7 @@ export async function addVertex() {
     await createVertexEndpoint(graphId, x, y)
         .then(vertex => {
             const json = JSON.parse(vertex);
-            console.log('Added vertex=' + vertex)
+            console.debug('Added vertex=' + vertex)
             showSuccessMessage('Successfully added vertex!')
             addVertexOnCanvas(json)
         }).catch(error => {
@@ -29,7 +36,7 @@ export async function deleteVertex() {
     let vertexId = deleteVertexParams.vertexId
     await deleteVertexEndpoint(graphId, vertexId)
         .then(() => {
-            console.log(`Delete vertex: graph_id=${graphId}, vertex_id=${vertexId}`)
+            console.debug(`Delete vertex: graph_id=${graphId}, vertex_id=${vertexId}`)
             showSuccessMessage('Successfully deleted vertex!')
             deleteVertexOnCanvas(vertexId)
         }).catch(error => {
@@ -41,11 +48,11 @@ export async function deleteVertex() {
 
 export async function deleteGraph(graphId) {
     deleteGraphEndpoint(graphId).then(r => {
-        console.log('Deleted graph with id=' + graphId)
+        console.debug('Deleted graph with id=' + graphId)
         removeItemFromList(graphId)
         showSuccessMessage('Successfully deleted graph!')
     }).catch(error => {
-        showFailMessage('Something went wrong!')
+        showFailMessage('Something went wrong deleting graph!')
         console.log(error)
     })
     closeDeleteConfirmPopup();
@@ -53,4 +60,44 @@ export async function deleteGraph(graphId) {
     if (graphId === currentLoadedGraph.graphId) {
         clearAll()
     }
+}
+
+export async function addEdge() {
+    let graphId = addEdgeParams.graphId
+    let vertexInId = addEdgeParams.vertexInId
+    let vertexOutId = addEdgeParams.vertexOutId
+
+    addEdgeEndpoint(graphId, vertexInId, vertexOutId)
+        .then(addedEdgeResp => {
+
+            showSuccessMessage('Successfully added edge!')
+            addEdgeOnCanvas(JSON.parse(addedEdgeResp))
+            repaint()
+            console.log('Added edge')
+        }).catch(error => {
+        showFailMessage('Something went wrong deleting edge!')
+        console.log(error)
+    })
+    resetAddEdgeParams()
+    unmarkSelectedVertices()
+
+
+}
+
+export async function selectToEdge() {
+    let vertexId = selectedVertexId.vertexId
+    if (addEdgeParams.vertexInId === null) {
+        addEdgeParams.vertexInId = vertexId
+        markVertexSelected(vertexId)
+
+    } else if (addEdgeParams.vertexOutId === null) {
+        addEdgeParams.vertexOutId = vertexId;
+        markVertexSelected(vertexId)
+        await addEdge()
+    }
+}
+
+function resetAddEdgeParams() {
+    addEdgeParams.vertexInId = null
+    addEdgeParams.vertexOutId = null
 }

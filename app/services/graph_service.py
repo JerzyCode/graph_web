@@ -43,9 +43,10 @@ def add_edge_to_graph(graph_id, vertex_in_id, vertex_out_id):
     graph = db_util.get_data_from_db_or_404(Graph, graph_id)
     if _check_if_graph_has_edge(graph, vertex_in, vertex_out):
         return
-    edge_service.create_edge(vertex_in=vertex_in, vertex_out=vertex_out, graph_id=graph_id)
+    edge = edge_service.create_edge(vertex_in=vertex_in, vertex_out=vertex_out, graph_id=graph_id)
     vertex_service.add_neighbor_to_vertex(vertex_in, vertex_out)
     vertex_service.add_neighbor_to_vertex(vertex_out, vertex_in)
+    return edge
 
 
 def delete_edge_from_graph(edge_id):

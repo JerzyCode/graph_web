@@ -59,3 +59,16 @@ export async function deleteVertexEndpoint(graphId, vertexId) {
         throw error;
     }
 }
+
+export async function addEdgeEndpoint(graphId, vertexInId, vertexOutId) {
+    try {
+        const response = await fetch(`/graph/edge?graph_id=${graphId}&vertex_in_id=${vertexInId}&vertex_out_id=${vertexOutId}`, {
+            method: 'POST'
+        })
+        const data = await response.json()
+        return JSON.stringify(data)
+    } catch (error) {
+        console.error('There was a problem with the adding edge to graph operation:', error);
+        throw error;
+    }
+}

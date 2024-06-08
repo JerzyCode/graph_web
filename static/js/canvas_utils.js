@@ -7,7 +7,7 @@ export function prepareEdgesToDraw(edges, preparedVertices) {
     return preparedEdges
 }
 
-function prepareEdgeToDraw(edge, preparedVertices) {
+export function prepareEdgeToDraw(edge, preparedVertices) {
     let preparedEdge = {}
     let preparedVerticesForEdge = findPreparedVerticesForEdge(edge, preparedVertices)
     preparedEdge.id = edge.id
