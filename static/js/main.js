@@ -49,11 +49,17 @@ const addListeners = function () {
     }
 }
 
-//TODO notification zeby nie bylo kilka na raz
 function showNotification(message, color) {
     if (isShowedNotification) {
         return
     }
+    setNotificationBarVisible(message, color)
+    setTimeout(() => {
+        setNotificationBarInvisible()
+    }, 1500);
+}
+
+function setNotificationBarVisible(message, color) {
     isShowedNotification = true
     const notificationMessage = document.getElementById('notification-message');
     notificationMessage.textContent = message;
@@ -62,11 +68,12 @@ function showNotification(message, color) {
     notificationBar.classList.add('show')
     notificationBar.style.display = 'block'
     progress.classList.add('active')
-    setTimeout(() => {
-        notificationBar.classList.remove('show');
-        progress.classList.remove('active')
-        isShowedNotification = false
-    }, 3300);
+}
+
+function setNotificationBarInvisible() {
+    notificationBar.classList.remove('show');
+    progress.classList.remove('active')
+    isShowedNotification = false
 }
 
 export function showSuccessMessage(message) {

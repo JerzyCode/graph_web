@@ -40,7 +40,6 @@ export async function loadGraphOnCanvas(graphId) {
     graph = JSON.parse(graphJson);
     console.log(`loadGraphOnCanvas(), graphId=${graphId}`)
     vertices = graph.vertices
-    console.log(JSON.stringify(vertices))
     edges = prepareEdgesToDraw(graph.edges, vertices)
     mapVerticesColor()
     redrawGraph()

@@ -162,7 +162,7 @@ canvas {
 }
 
 .progress-bar.active {
-    animation: progress 3.3s linear forwards;
+    animation: progress 1.5s linear forwards;
 }
 
 @keyframes progress {
