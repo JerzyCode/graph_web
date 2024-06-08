@@ -244,6 +244,7 @@ function calculateCoordsOnCanvas(event) {
 export function addEdgeOnCanvas(edge) {
     let preparedEdge = prepareEdgeToDraw(edge, vertices)
     edges.push(preparedEdge)
+    repaint()
 }
 
 
@@ -251,12 +252,17 @@ export function addVertexOnCanvas(vertex) {
     console.debug(`addVertexOnCanvas(), vertex=${JSON.stringify(vertex)}`)
     vertices.push(vertex)
     verticesColor.set(vertex.id, VERTEX_FILL_COLOR)
-    drawVertex(vertex)
+    repaint()
 }
 
 export function deleteVertexOnCanvas(vertexId) {
     vertices = vertices.filter(vertex => vertex.id !== vertexId);
+    deleteEdgesIncidental(vertexId)
     repaint()
+}
+
+export function deleteEdgesIncidental(vertexId) {
+    edges = edges.filter(edge => edge.vertex_in.id !== vertexId && edge.vertex_out.id !== vertexId)
 }
 
 export function markVertexSelected(vertexId) {

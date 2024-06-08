@@ -1,5 +1,5 @@
 import {addEdgeEndpoint, createVertexEndpoint, deleteGraphEndpoint, deleteVertexEndpoint} from "./endpoints.js";
-import {addEdgeOnCanvas, addVertexOnCanvas, clearAll, deleteVertexOnCanvas, markVertexSelected, repaint, unmarkSelectedVertices} from "./canvas.js";
+import {addEdgeOnCanvas, addVertexOnCanvas, clearAll, deleteVertexOnCanvas, markVertexSelected, unmarkSelectedVertices} from "./canvas.js";
 import {showFailMessage, showSuccessMessage} from "./main.js";
 import {closeDeleteConfirmPopup, removeItemFromList} from "./your_graphs_popup.js";
 
@@ -72,7 +72,6 @@ export async function addEdge() {
 
             showSuccessMessage('Successfully added edge!')
             addEdgeOnCanvas(JSON.parse(addedEdgeResp))
-            repaint()
             console.log('Added edge')
         }).catch(error => {
         showFailMessage('Something went wrong deleting edge!')
