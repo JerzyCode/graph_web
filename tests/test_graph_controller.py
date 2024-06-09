@@ -1,6 +1,7 @@
 import json
 from unittest.mock import patch
 
+from app.models import Vertex
 from app.utils.dto import GraphDTO
 
 
@@ -95,8 +96,9 @@ def test_get_graph_endpoint_should_return_404(client):
 def test_post_vertex_should_return_200(client):
     with patch('app.services.graph_service.add_vertex_to_graph') as mock_graph_service:
         # given
+        mock_graph_service.return_value = Vertex(graph_id=1, x=512, y=124)
         # when
-        response = client.post('/graph/vertex', query_string={'graph_id': 1, 'x': 512, 'y': 124})
+        response = client.post('/graph/vertex', query_string={'graph_id': 1, 'x': 512, 'y': 124}, content_type='application/json')
         # then
         assert response.status_code == 200
         mock_graph_service.assert_called_once()

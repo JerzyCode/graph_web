@@ -9,6 +9,8 @@ db_url = 'sqlite:///'
 def app():
     app = create_app(db_url)
 
+    app.config['TESTING'] = True
+    app.config['DEBUG'] = True
     with app.app_context():
         db.create_all()
 

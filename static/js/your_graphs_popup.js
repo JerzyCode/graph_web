@@ -1,9 +1,7 @@
-import {deleteGraph} from "./graph_service.js";
-import {clearAll, loadGraphOnCanvas} from "./canvas.js";
-import {showNotification} from "./main.js";
+import {loadGraphOnCanvas} from "./canvas.js";
+import {showSuccessMessage} from "./main.js";
+import {currentLoadedGraph, deleteGraph} from "./modify_graph_service.js";
 
-
-let currentLoadedGraphId;
 
 export function openYourGraphsPopup() {
     loadYourGraphsPopup().catch(() => console.log('cant open popup'))
@@ -27,7 +25,7 @@ async function loadYourGraphsPopup() {
 function setYourGraphsPopupButtons() {
     const closeButton = document.getElementById('closeButton')
     if (closeButton) {
-        closeButton.addEventListener('click', closePopup)
+        closeButton.addEventListener('click', closeYourGraphsPopup)
     }
 
     const listItem = document.getElementsByClassName('graph-item')
@@ -39,44 +37,42 @@ function setYourGraphsPopupButtons() {
         const graphId = item.getAttribute('graph-data-id');
         const loadGraphButtons = item.getElementsByClassName('link-as-text');
         const deleteGraphButtons = item.getElementsByClassName('delete-graph-button')
-        const editGraphButtons = item.getElementsByClassName('edit-graph-button')
 
         Array.from(loadGraphButtons).forEach(button => {
             setEventListenerLoadGraphButton(button, graphId)
         });
 
-        Array.from(deleteGraphButtons).forEach(button => {
-            setEventListenerDeleteGraphButton(button, confirmDeleteButton, graphId)
+        Array.from(deleteGraphButtons).forEach(deleteGraphButton => {
+            setEventListenerDeleteGraphButton(deleteGraphButton, confirmDeleteButton, graphId)
         })
 
-        Array.from(editGraphButtons).forEach(button => {
-            setEventListenerEditGraphButton(button, graphId)
-        })
     })
 
 
     if (cancelDeleteButton) {
-        setEventListenerCancelDeleteButton(cancelDeleteButton)
+        cancelDeleteButton.addEventListener('click', closeDeleteConfirmPopup)
     }
+
 }
 
 function setEventListenerLoadGraphButton(button, graphId) {
     button.addEventListener('click', function (event) {
         event.preventDefault();
-        onLoadGraph(graphId).then(r => console.log('Loaded Graph with id:' + graphId))
+        onLoadGraph(graphId).then(r => {
+            showSuccessMessage('Loaded graph!')
+        })
     });
 }
 
 async function onLoadGraph(graphId) {
     try {
         await loadGraphOnCanvas(graphId);
-        currentLoadedGraphId = graphId
-        closePopup();
+        currentLoadedGraph.graphId = graphId
+        closeYourGraphsPopup();
     } catch (error) {
         console.error('Error loading graph occurred:', error);
     }
 }
-
 
 function setEventListenerDeleteGraphButton(button, confirmDeleteButton, graphId) {
     button.addEventListener('click', function () {
@@ -87,30 +83,12 @@ function setEventListenerDeleteGraphButton(button, confirmDeleteButton, graphId)
 
 function setEventListenerConfirmDeleteButton(confirmDeleteButton, graphId) {
     confirmDeleteButton.addEventListener('click', function () {
-        const deletedGraphId = deleteGraph(graphId).then(r => {
-            console.log('Deleted graph with id=' + graphId)
-            removeItemFromList(graphId)
-            showNotification('Successfully deleted graph!', '#4cda15')
-        }).catch(error => {
-            showNotification('Something went wrong!', '#ff0000')
-            console.log(error)
-        })
-        closeDeleteConfirmPopup()
-        if (deletedGraphId === currentLoadedGraphId) {
-            clearAll()
-            currentLoadedGraphId = null
-        }
-    })
-
-}
-
-function setEventListenerCancelDeleteButton(cancelDeleteButton) {
-    cancelDeleteButton.addEventListener('click', function () {
-        closeDeleteConfirmPopup()
+        deleteGraph(graphId)
     })
 }
 
-function removeItemFromList(removedGraphId) {
+
+export function removeItemFromList(removedGraphId) {
     const listItem = document.getElementsByClassName('graph-item')
     Array.from(listItem).forEach(item => {
         const graphId = item.getAttribute('graph-data-id');
@@ -120,14 +98,8 @@ function removeItemFromList(removedGraphId) {
     })
 }
 
-function setEventListenerEditGraphButton(button) {
-    button.addEventListener('click', function () {
-        console.log('edit')
-    });
-}
 
-
-export function closePopup() {
+export function closeYourGraphsPopup() {
     document.getElementById('popup-container').style.display = 'none';
 }
 
@@ -136,6 +108,7 @@ function openDeleteConfirmPopup() {
 }
 
 
-function closeDeleteConfirmPopup() {
+export function closeDeleteConfirmPopup() {
     document.getElementById('delete-confirm-popup').style.display = 'none'
 }
+

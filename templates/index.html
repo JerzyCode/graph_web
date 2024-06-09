@@ -12,6 +12,16 @@
     <header class="header">
         Header
     </header>
+    <div id="add-vertex-popup" class="on-canvas-popup">
+        <button id="add-vertex-button" class="sidebar-button">Add Vertex</button>
+    </div>
+    <div id="graph-actions-popup" class="on-canvas-popup graph-actions-popup">
+        <button id="delete-vertex-button" class="sidebar-button">Delete Vertex</button>
+        <button id="select-to-edge-button" class="sidebar-button">Select to add edge</button>
+    </div>
+    <div id="delete-edge-popup" class="on-canvas-popup delete-edge-popup">
+        <button id="delete-edge-button" class="sidebar-button">Delete Edge</button>
+    </div>
     <div id="notification-bar" class="notification-bar">
         <div class="notification-content">
             <span id="notification-message"></span>
@@ -19,13 +29,23 @@
         <div class="progress-bar" id="progress-bar"></div>
     </div>
     <div class="content">
+        <div class="popup-container" id="create-graph-popup-container">
+            <div id="create-graph-popup" class="popup-content create-graph-popup">
+                <label for="graph-name">Graph Name:</label>
+                <input type="text" id="graph-name" name="graph-name" placeholder="Enter graph name" required>
+                <hr>
+                <div class="create-graph-button-container">
+                    <button id="create-new-graph-button" class="sidebar-button create-graph-button">Create</button>
+                    <button id="close-create-graph-popup-button" class="sidebar-button">Close</button>
+                </div>
+            </div>
+        </div>
         <div class="popup-container" id="popup-container"></div>
         <aside class="sidebar">
             <div class="main-menu"><b>Main Menu</b></div>
             <hr class="menu-line">
             <button id="your-graphs-button" class="sidebar-button">Your Graphs</button>
-            <button class="sidebar-button">Save Graph</button>
-            <button class="sidebar-button">Info</button>
+            <button id="create-graph-show-popup-button" class="sidebar-button"> Create Graph</button>
         </aside>
         <div id="canvas-container" class="canvas-container">
             <canvas id="canvas"></canvas>

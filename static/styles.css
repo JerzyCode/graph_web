@@ -44,11 +44,11 @@ body {
 }
 
 .canvas-container {
-    border: solid purple;
+    border: 3px solid #2dcebc;
     display: flex;
-    background-color: #eee;
+    background-color: #1a130f;
     border-radius: 15px;
-    overflow: auto;
+    /*overflow: hidden;*/
     min-width: 80vw;
     min-height: 80vh;
 }
@@ -86,6 +86,7 @@ canvas {
 }
 
 .sidebar-button {
+    white-space: nowrap;
     display: block;
     margin-top: 5px;
     background-color: #272640;
@@ -161,7 +162,7 @@ canvas {
 }
 
 .progress-bar.active {
-    animation: progress 3.3s linear forwards;
+    animation: progress 1.5s linear forwards;
 }
 
 @keyframes progress {
@@ -178,3 +179,79 @@ canvas {
         width: 50vw;
     }
 }
+
+.on-canvas-popup {
+    display: none;
+    position: absolute;
+    z-index: 10000;
+}
+
+.on-canvas-popup .sidebar-button {
+    text-align: left;
+    text-wrap: none;
+    width: 100%;
+    height: 30px;
+    font-size: 15px;
+}
+
+.on-canvas-popup .sidebar-button:hover {
+    text-wrap: none;
+    height: 30px;
+    font-size: 15px;
+}
+
+.graph-actions-popup {
+    border: 2px solid #2dcebc;
+    border-radius: 10px;
+    background-color: #006466;
+    width: 150px;
+}
+
+
+.graph-actions-popup .sidebar-button {
+    width: 100%;
+    text-align: center;
+}
+
+.create-graph-button-container {
+    display: flex;
+    width: 100%;
+}
+
+.create-graph-popup label {
+    margin-bottom: 10px;
+    margin-right: 50px;
+    font-size: 18px;
+    color: #2dcebc;
+    font-weight: bold;
+}
+
+.create-graph-popup button {
+    flex: 1;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.create-graph-popup input[type="text"] {
+    width: 63%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #2dcebc;
+    background-color: #272640;
+    color: #2dcebc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+
+.sidebar-button.create-graph-button {
+    background-color: #2dcebc;
+    color: #272640;
+}
+
+.sidebar-button.create-graph-button:hover {
+    background-color: greenyellow;
+    color: #272640;
+}
+
+

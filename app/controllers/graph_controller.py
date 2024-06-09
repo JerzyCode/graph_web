@@ -14,8 +14,8 @@ class GraphController:
         if graph_name is None:
             return 'No graph name provided', 400
         else:
-            self._service.create_empty_graph(graph_name=graph_name)
-            return 'Graph created successfully', 200
+            graph_id = self._service.create_empty_graph(graph_name=graph_name)
+            return {'graph_id': graph_id}, 200
 
     def handle_delete_graph_request(self, req):
         graph_id = req.args.get('graph_id')
@@ -49,8 +49,8 @@ class GraphController:
         if graph_id is None or vertex_x is None or vertex_y is None:
             return 'No graph_id, x or y provided', 400
         else:
-            self._service.add_vertex_to_graph(graph_id=graph_id, vertex_x=vertex_x, vertex_y=vertex_y)
-            return 'Added vertex', 200
+            created_vertex = self._service.add_vertex_to_graph(graph_id=graph_id, vertex_x=vertex_x, vertex_y=vertex_y)
+            return jsonify(created_vertex.to_dict()), 200
 
     def handle_delete_vertex_request(self, req):
         graph_id = req.args.get('graph_id')
@@ -78,8 +78,8 @@ class GraphController:
         if graph_id is None or vertex_in_id is None or vertex_out_id is None:
             return 'No graph_id, vertex_out_id vertex_in_id y provided', 400
         else:
-            self._service.add_edge_to_graph(graph_id=graph_id, vertex_in_id=vertex_in_id, vertex_out_id=vertex_out_id)
-            return 'Added edge', 200
+            created_edge = self._service.add_edge_to_graph(graph_id=graph_id, vertex_in_id=vertex_in_id, vertex_out_id=vertex_out_id)
+            return jsonify(created_edge.to_dict()), 200
 
     def handle_delete_edge_request(self, req):
         edge_id = req.args.get('edge_id')

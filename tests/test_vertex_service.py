@@ -12,12 +12,11 @@ def test_create_vertex(app):
         x_position = random.randint(0, 500)
         y_position = random.randint(0, 500)
         # when
-        vertex_service.create_vertex(x_position, y_position)
+        created_vertex = vertex_service.create_vertex(x_position, y_position)
         # then
-        saved_vertex = db.session.query(Vertex).first()
-        assert saved_vertex is not None
-        assert saved_vertex.x == x_position
-        assert saved_vertex.y == y_position
+        assert created_vertex is not None
+        assert created_vertex.x == x_position
+        assert created_vertex.y == y_position
 
 
 def test_delete_vertex(app):

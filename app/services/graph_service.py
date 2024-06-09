@@ -8,6 +8,7 @@ from app.utils.dto import GraphDTO
 def create_empty_graph(graph_name):
     graph = Graph(graph_name)
     db_util.save_data_in_db(graph)
+    return graph.id
 
 
 def delete_graph(graph_id):
@@ -22,7 +23,7 @@ def update_graph_name(graph_id, new_graph_name):
 
 
 def add_vertex_to_graph(graph_id, vertex_x, vertex_y):
-    vertex_service.create_vertex(x_position=vertex_x, y_position=vertex_y, graph_id=graph_id)
+    return vertex_service.create_vertex(x_position=vertex_x, y_position=vertex_y, graph_id=graph_id)
 
 
 def update_vertex_position(vertex_id, new_x_position, new_y_position):
@@ -43,9 +44,10 @@ def add_edge_to_graph(graph_id, vertex_in_id, vertex_out_id):
     graph = db_util.get_data_from_db_or_404(Graph, graph_id)
     if _check_if_graph_has_edge(graph, vertex_in, vertex_out):
         return
-    edge_service.create_edge(vertex_in=vertex_in, vertex_out=vertex_out, graph_id=graph_id)
+    edge = edge_service.create_edge(vertex_in=vertex_in, vertex_out=vertex_out, graph_id=graph_id)
     vertex_service.add_neighbor_to_vertex(vertex_in, vertex_out)
     vertex_service.add_neighbor_to_vertex(vertex_out, vertex_in)
+    return edge
 
 
 def delete_edge_from_graph(edge_id):
