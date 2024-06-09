@@ -44,11 +44,11 @@ body {
 }
 
 .canvas-container {
-    border: solid purple;
+    border: 3px solid #2dcebc;
     display: flex;
-    background-color: #eee;
+    background-color: #1a130f;
     border-radius: 15px;
-    overflow: auto;
+    /*overflow: hidden;*/
     min-width: 80vw;
     min-height: 80vh;
 }
@@ -189,7 +189,7 @@ canvas {
 .on-canvas-popup .sidebar-button {
     text-align: left;
     text-wrap: none;
-    width: 85px;
+    width: 100%;
     height: 30px;
     font-size: 15px;
 }

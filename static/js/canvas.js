@@ -1,5 +1,5 @@
 import {fetchGraph} from "./endpoints.js";
-import {showAddVertexPopup, showGraphActionsPopup} from "./main.js";
+import {showAddVertexPopup, showDeleteEdgePopup, showGraphActionsPopup} from "./main.js";
 import {prepareEdgesToDraw, prepareEdgeToDraw} from "./canvas_utils.js";
 import {addEdgeParams, addVertexParams, deleteVertexParams, selectedVertexId} from "./modify_graph_service.js";
 
@@ -7,22 +7,25 @@ const canvas = document.getElementById("canvas")
 const container = document.getElementById("canvas-container")
 const ctx = canvas.getContext('2d')
 
-const VERTEX_BORDER_COLOR = 'purple'
-const VERTEX_FILL_COLOR = 'yellow'
-const VERTEX_REPAINT_COLOR = 'orange'
-const VERTEX_TO_EDGE_COLOR = ' red'
-const VERTEX_RADIUS = 10
-const EDGE_WIDTH = 2
-const EDGE_COLOR = 'purple'
+const VERTEX_BORDER_COLOR = '#2dcebc'
+const VERTEX_FILL_COLOR = '#0b5351'
+const VERTEX_REPAINT_COLOR = '#d90368'
+const VERTEX_TO_EDGE_COLOR = ' yellow'
+const VERTEX_RADIUS = 12
+const EDGE_WIDTH = 3
+const EDGE_COLOR = '#2dcebc'
+const EDGE_REPAINT_COLOR = '#d90368'
 
 
 let graph
 let vertices = []
 let verticesColor = new Map()
+let edgesColor = new Map()
 let edges = []
 let currentVertex = null
 let isDragging = false
 let selectedVertices = []
+
 
 canvas.width = container.clientWidth
 canvas.height = container.clientHeight
@@ -44,12 +47,19 @@ export async function loadGraphOnCanvas(graphId) {
     vertices = graph.vertices
     edges = prepareEdgesToDraw(graph.edges, vertices)
     mapVerticesColor()
+    mapEdgesColor()
     redrawGraph()
 }
 
 function mapVerticesColor() {
     for (let vertex of vertices) {
         verticesColor.set(vertex.id, VERTEX_FILL_COLOR)
+    }
+}
+
+function mapEdgesColor() {
+    for (let edge of edges) {
+        edgesColor.set(edge.id, EDGE_COLOR)
     }
 }
 
@@ -62,7 +72,7 @@ function handleMouseDown(event) {
 
     event.preventDefault()
     for (let vertex of vertices) {
-        if (isVertexPressed(event, vertex)) {
+        if (isMouseOnVertex(event, vertex)) {
             currentVertex = vertex
             isDragging = true
             console.log(vertex)
@@ -71,7 +81,7 @@ function handleMouseDown(event) {
     }
 }
 
-function isVertexPressed(event, vertex) {
+function isMouseOnVertex(event, vertex) {
     let canvasCoords = calculateCoordsOnCanvas(event)
     const dx = canvasCoords.x - vertex.x
     const dy = canvasCoords.y - vertex.y
@@ -90,7 +100,9 @@ function handleStopDragging(event) {
 function handleMouseMove(event) {
     canvas.style.cursor = 'default'
     let canvasCoords = calculateCoordsOnCanvas(event)
+
     mouseOnVertexEvent(event)
+    mouseOnEdgeEvent(event)
     if (isDragging) {
         if (canvasCoords.x < VERTEX_RADIUS || canvasCoords.x > canvas.width - VERTEX_RADIUS ||
             canvasCoords.y < VERTEX_RADIUS || canvasCoords.y > canvas.height - VERTEX_RADIUS) {
@@ -106,7 +118,7 @@ function handleMouseMove(event) {
 function mouseOnVertexEvent(event) {
     for (let vertex of vertices) {
         let isSelected = isVertexSelected(vertex)
-        if (isVertexPressed(event, vertex)) {
+        if (isMouseOnVertex(event, vertex)) {
             if (!isSelected) {
                 verticesColor.set(vertex.id, VERTEX_REPAINT_COLOR)
             }
@@ -116,11 +128,10 @@ function mouseOnVertexEvent(event) {
         } else {
             verticesColor.set(vertex.id, VERTEX_FILL_COLOR)
         }
-
-
     }
     repaint()
 }
+
 
 function isVertexSelected(vertex) {
     for (let selected of selectedVertices) {
@@ -131,6 +142,49 @@ function isVertexSelected(vertex) {
     return false
 }
 
+function mouseOnEdgeEvent(event) {
+    let canvasCoords = calculateCoordsOnCanvas(event)
+    for (let edge of edges) {
+        if (isMouseOnEdge(edge, canvasCoords)) {
+            edgesColor.set(edge.id, EDGE_REPAINT_COLOR)
+            canvas.style.cursor = 'pointer'
+        } else {
+            edgesColor.set(edge.id, EDGE_COLOR)
+        }
+    }
+    repaint()
+}
+
+function isMouseOnEdge(edge, canvasCoords) {
+    let minX = Math.min(edge.vertex_in.x, edge.vertex_out.x)
+    let maxX = Math.max(edge.vertex_in.x, edge.vertex_out.x)
+    let minY = Math.min(edge.vertex_in.y, edge.vertex_out.y)
+    let maxY = Math.max(edge.vertex_in.y, edge.vertex_out.y)
+    if (canvasCoords.x < minX || canvasCoords.x > maxX || canvasCoords.y < minY || canvasCoords.y > maxY) {
+        return
+    }
+    calculateDistanceFromMouseToEdgeLine(edge, canvasCoords)
+    let distance = calculateDistanceFromMouseToEdgeLine(edge, canvasCoords)
+    // return true
+    return Math.abs(distance - EDGE_WIDTH) <= 10;
+}
+
+function calculateDistanceFromMouseToEdgeLine(edge, canvasCoords) {
+    let x1 = edge.vertex_in.x
+    let y1 = edge.vertex_in.y
+    let x2 = edge.vertex_out.x
+    let y2 = edge.vertex_out.y
+
+    // Line coefficients
+    let A = (y2 - y1)
+    let B = -(x2 - x1)
+    let C = x2 * y1 - y2 * x1
+    let nominator = Math.abs(A * canvasCoords.x + B * canvasCoords.y + C)
+    let denominator = Math.sqrt(A * A + B * B)
+    return nominator / denominator
+}
+
+
 function handleRightClick(event) {
     event.preventDefault()
     if (graph == null) {
@@ -140,9 +194,12 @@ function handleRightClick(event) {
     console.debug(`pressed RightClick() on coords: ${canvasCoords.x}, ${canvasCoords.y}`)
 
     let pressedVertex = returnPressedVertex(event)
+    let pressedEdge = returnPressedEdge(event)
     if (pressedVertex != null) {
-        onCanvasShowGraphActionsPopup(canvasCoords, event)
+        onCanvasShowGraphActionsPopup(event)
         setGraphOptionsParams(pressedVertex)
+    } else if (pressedEdge != null) {
+        onCanvasShowDeleteEdgePopup(event)
     } else {
         onCanvasShowAddVertexPopup(canvasCoords, event)
     }
@@ -157,16 +214,29 @@ function setGraphOptionsParams(pressedVertex) {
 
 function returnPressedVertex(event) {
     for (let vertex of vertices) {
-        if (isVertexPressed(event, vertex)) {
+        if (isMouseOnVertex(event, vertex)) {
             return vertex
         }
     }
     return null
 }
 
-function onCanvasShowGraphActionsPopup(canvasCoords, event) {
-    showGraphActionsPopup(event.x, event.y)
+function returnPressedEdge(event) {
+    let canvasCoords = calculateCoordsOnCanvas(event)
+    for (let edge of edges) {
+        if (isMouseOnEdge(edge, canvasCoords)) {
+            return edge
+        }
+    }
+    return null
+}
 
+function onCanvasShowGraphActionsPopup(event) {
+    showGraphActionsPopup(event.x, event.y)
+}
+
+function onCanvasShowDeleteEdgePopup(event) {
+    showDeleteEdgePopup(event.x, event.y)
 }
 
 function onCanvasShowAddVertexPopup(canvasCoords, event) {
@@ -204,7 +274,7 @@ function drawVertex(vertex) {
 }
 
 export function drawEdge(edge) {
-    ctx.strokeStyle = EDGE_COLOR
+    ctx.strokeStyle = edgesColor.get(edge.id)
     ctx.lineWidth = EDGE_WIDTH
     ctx.beginPath()
     ctx.moveTo(edge.vertex_in.x, edge.vertex_in.y)

@@ -79,8 +79,6 @@ export async function addEdge() {
     })
     resetAddEdgeParams()
     unmarkSelectedVertices()
-
-
 }
 
 export async function selectToEdge() {
@@ -99,4 +97,8 @@ export async function selectToEdge() {
 function resetAddEdgeParams() {
     addEdgeParams.vertexInId = null
     addEdgeParams.vertexOutId = null
+}
+
+export async function deleteEdge() {
+    console.log('delete edge')
 }
