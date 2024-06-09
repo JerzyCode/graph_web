@@ -212,3 +212,46 @@ canvas {
     width: 100%;
     text-align: center;
 }
+
+.create-graph-button-container {
+    display: flex;
+    width: 100%;
+}
+
+.create-graph-popup label {
+    margin-bottom: 10px;
+    margin-right: 50px;
+    font-size: 18px;
+    color: #2dcebc;
+    font-weight: bold;
+}
+
+.create-graph-popup button {
+    flex: 1;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.create-graph-popup input[type="text"] {
+    width: 63%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #2dcebc;
+    background-color: #272640;
+    color: #2dcebc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+
+.sidebar-button.create-graph-button {
+    background-color: #2dcebc;
+    color: #272640;
+}
+
+.sidebar-button.create-graph-button:hover {
+    background-color: greenyellow;
+    color: #272640;
+}
+
+
