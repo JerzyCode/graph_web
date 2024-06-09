@@ -1,13 +1,14 @@
 import json
 from unittest.mock import patch
 
-from app.models import Vertex
+from app.models import Vertex, Edge
 from app.utils.dto import GraphDTO
 
 
 def test_post_graph_endpoint_should_return_200(client):
     with patch('app.services.graph_service.create_empty_graph') as mock_graph_service:
         # given
+        mock_graph_service.return_value = 123
         # when
         response = client.post('/graph/', query_string={'graph_name': 'test_graph_name'})
         # then
@@ -157,6 +158,7 @@ def test_put_vertex_should_return_400(client):
 def test_post_edge_should_return_200(client):
     with patch('app.services.graph_service.add_edge_to_graph') as mock_graph_service:
         # given
+        mock_graph_service.return_value = Edge(vertex_in=Vertex(0, 0, 1), vertex_out=Vertex(0, 0, 1), graph_id=1)
         # when
         response = client.post('/graph/edge', query_string={'graph_id': 1, 'vertex_in_id': 1, 'vertex_out_id': 2})
         # then
