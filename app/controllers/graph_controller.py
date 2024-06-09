@@ -14,8 +14,8 @@ class GraphController:
         if graph_name is None:
             return 'No graph name provided', 400
         else:
-            self._service.create_empty_graph(graph_name=graph_name)
-            return 'Graph created successfully', 200
+            graph_id = self._service.create_empty_graph(graph_name=graph_name)
+            return {'graph_id': graph_id}, 200
 
     def handle_delete_graph_request(self, req):
         graph_id = req.args.get('graph_id')

@@ -1,6 +1,6 @@
 import {repaint} from "./canvas.js";
 import {closeYourGraphsPopup, openYourGraphsPopup} from "./your_graphs_popup.js";
-import {addVertex, deleteEdge, deleteVertex, selectToEdge} from "./modify_graph_service.js";
+import {addVertex, createGraph, deleteEdge, deleteVertex, selectToEdge} from "./modify_graph_service.js";
 
 const notificationBar = document.getElementById('notification-bar')
 const progress = document.getElementById('progress-bar')
@@ -19,7 +19,6 @@ const deleteEdgeButton = document.getElementById('delete-edge-button')
 
 const createNewGraphShowPopupButton = document.getElementById('create-graph-show-popup-button')
 
-const createGraphPopup = document.getElementById('create-graph-popup')
 const createGraphButton = document.getElementById('create-new-graph-button')
 const closeCreateGraphPopupButton = document.getElementById('close-create-graph-popup-button')
 let isShowedNotification = false
@@ -43,6 +42,14 @@ const addListeners = function () {
 
     if (deleteEdgeButton) {
         deleteEdgeButton.addEventListener('click', deleteEdge)
+    }
+
+    if (createGraphButton) {
+        createGraphButton.addEventListener('click', () => {
+            const graphNameInput = document.getElementById('graph-name');
+            const graphName = graphNameInput.value;
+            createGraph(graphName)
+        })
     }
 
     if (createNewGraphShowPopupButton) {
@@ -145,7 +152,7 @@ function showCreateGraphPopup() {
 
 }
 
-function closeCreateGraphPopup() {
+export function closeCreateGraphPopup() {
     document.getElementById('create-graph-popup-container').style.display = 'none';
 }
 

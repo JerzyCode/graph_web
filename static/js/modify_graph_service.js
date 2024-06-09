@@ -1,14 +1,22 @@
-import {addEdgeEndpoint, createVertexEndpoint, deleteEdgeEndpoint, deleteGraphEndpoint, deleteVertexEndpoint} from "./endpoints.js";
+import {
+    addEdgeEndpoint,
+    createGraphEndpoint,
+    createVertexEndpoint,
+    deleteEdgeEndpoint,
+    deleteGraphEndpoint,
+    deleteVertexEndpoint
+} from "./endpoints.js";
 import {
     addEdgeOnCanvas,
     addVertexOnCanvas,
     clearAll,
     deleteEdgeOnCanvas,
     deleteVertexOnCanvas,
+    loadGraphOnCanvas,
     markVertexSelected,
     unmarkSelectedVertices
 } from "./canvas.js";
-import {showFailMessage, showSuccessMessage} from "./main.js";
+import {closeCreateGraphPopup, showFailMessage, showSuccessMessage} from "./main.js";
 import {closeDeleteConfirmPopup, removeItemFromList} from "./your_graphs_popup.js";
 
 
@@ -123,4 +131,20 @@ export async function deleteEdge() {
             console.log(error)
         })
     deleteEdgeParams.edgeId = null
+}
+
+export function createGraph(graphName) {
+
+    createGraphEndpoint(graphName)
+        .then(graphId => {
+            closeCreateGraphPopup()
+            loadGraphOnCanvas(graphId)
+                .then(() => {
+                    showSuccessMessage('Successfully created graph!')
+                })
+        })
+        .catch(error => {
+            showFailMessage('Something went wrong creating graph!')
+            console.log(error)
+        })
 }

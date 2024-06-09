@@ -89,3 +89,19 @@ export async function deleteEdgeEndpoint(edgeId) {
         throw error;
     }
 }
+
+export async function createGraphEndpoint(graphName) {
+    try {
+        const response = await fetch(`/graph?graph_name=${graphName}`, {
+            method: 'POST'
+        })
+        if (!response.ok) {
+            throw new Error(`Failed to create graph. Status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        return responseData.graph_id;
+    } catch (error) {
+        console.error('There was a problem with the create graph operation:', error);
+        throw error;
+    }
+}

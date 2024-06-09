@@ -8,6 +8,7 @@ from app.utils.dto import GraphDTO
 def create_empty_graph(graph_name):
     graph = Graph(graph_name)
     db_util.save_data_in_db(graph)
+    return graph.id
 
 
 def delete_graph(graph_id):
