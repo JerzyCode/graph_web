@@ -72,3 +72,20 @@ export async function addEdgeEndpoint(graphId, vertexInId, vertexOutId) {
         throw error;
     }
 }
+
+export async function deleteEdgeEndpoint(edgeId) {
+    try {
+        const response = await fetch(`/graph/edge?edge_id=${edgeId}`, {
+            method: 'DELETE'
+        })
+
+        if (!response.ok) {
+            throw new Error(`Failed to delete edge with ID ${edgeId}. Status: ${response.status}`);
+        }
+
+
+    } catch (error) {
+        console.error('There was a problem with the deleting edge operation:', error);
+        throw error;
+    }
+}

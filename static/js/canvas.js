@@ -1,7 +1,7 @@
 import {fetchGraph} from "./endpoints.js";
 import {showAddVertexPopup, showDeleteEdgePopup, showGraphActionsPopup} from "./main.js";
 import {prepareEdgesToDraw, prepareEdgeToDraw} from "./canvas_utils.js";
-import {addEdgeParams, addVertexParams, deleteVertexParams, selectedVertexId} from "./modify_graph_service.js";
+import {addEdgeParams, addVertexParams, deleteEdgeParams, deleteVertexParams, selectedVertexId} from "./modify_graph_service.js";
 
 const canvas = document.getElementById("canvas")
 const container = document.getElementById("canvas-container")
@@ -199,6 +199,7 @@ function handleRightClick(event) {
         onCanvasShowGraphActionsPopup(event)
         setGraphOptionsParams(pressedVertex)
     } else if (pressedEdge != null) {
+        deleteEdgeParams.edgeId = pressedEdge.id
         onCanvasShowDeleteEdgePopup(event)
     } else {
         onCanvasShowAddVertexPopup(canvasCoords, event)
@@ -352,4 +353,9 @@ export function unmarkSelectedVertices() {
         backVertexBgToDefault(selected)
     }
     selectedVertices = []
+}
+
+export function deleteEdgeOnCanvas(edgeId) {
+    edges = edges.filter(edge => edge.id !== edgeId)
+    repaint()
 }

@@ -1,5 +1,13 @@
-import {addEdgeEndpoint, createVertexEndpoint, deleteGraphEndpoint, deleteVertexEndpoint} from "./endpoints.js";
-import {addEdgeOnCanvas, addVertexOnCanvas, clearAll, deleteVertexOnCanvas, markVertexSelected, unmarkSelectedVertices} from "./canvas.js";
+import {addEdgeEndpoint, createVertexEndpoint, deleteEdgeEndpoint, deleteGraphEndpoint, deleteVertexEndpoint} from "./endpoints.js";
+import {
+    addEdgeOnCanvas,
+    addVertexOnCanvas,
+    clearAll,
+    deleteEdgeOnCanvas,
+    deleteVertexOnCanvas,
+    markVertexSelected,
+    unmarkSelectedVertices
+} from "./canvas.js";
 import {showFailMessage, showSuccessMessage} from "./main.js";
 import {closeDeleteConfirmPopup, removeItemFromList} from "./your_graphs_popup.js";
 
@@ -8,6 +16,8 @@ export const addVertexParams = {}
 export const deleteVertexParams = {}
 export const currentLoadedGraph = {}
 export const selectedVertexId = {}
+
+export const deleteEdgeParams = {edgeId: null}
 
 export const addEdgeParams = {
     graphId: null,
@@ -100,5 +110,17 @@ function resetAddEdgeParams() {
 }
 
 export async function deleteEdge() {
-    console.log('delete edge')
+    let edgeId = deleteEdgeParams.edgeId
+
+    deleteEdgeEndpoint(edgeId)
+        .then(() => {
+            console.debug(`Delete edge: edge_id=${edgeId}`)
+            showSuccessMessage('Successfully deleted edge!')
+            deleteEdgeOnCanvas(edgeId)
+        })
+        .catch(error => {
+            showFailMessage('Something went wrong deleting edge!')
+            console.log(error)
+        })
+    deleteEdgeParams.edgeId = null
 }
