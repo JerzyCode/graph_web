@@ -105,3 +105,18 @@ export async function createGraphEndpoint(graphName) {
         throw error;
     }
 }
+
+export async function updateVertexCoordsEndpoint(vertexId, newX, newY) {
+    try {
+        const response = await fetch(`/graph/vertex?vertex_id=${vertexId}&x=${newX}&y=${newY}`, {
+            method: 'PUT'
+        })
+        if (!response.ok) {
+            throw new Error(`Failed to save new vertex coords`);
+        }
+
+    } catch (error) {
+        console.error('There was a problem with saving new vertex coords:', error);
+        throw error;
+    }
+}

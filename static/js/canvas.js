@@ -1,4 +1,4 @@
-import {fetchGraph} from "./endpoints.js";
+import {fetchGraph, updateVertexCoordsEndpoint} from "./endpoints.js";
 import {showAddVertexPopup, showDeleteEdgePopup, showGraphActionsPopup} from "./main.js";
 import {prepareEdgesToDraw, prepareEdgeToDraw} from "./canvas_utils.js";
 import {addEdgeParams, addVertexParams, deleteEdgeParams, deleteVertexParams, selectedVertexId} from "./modify_graph_service.js";
@@ -92,9 +92,17 @@ function handleStopDragging(event) {
     if (!isDragging) {
         return
     }
+    updateVertexPosition()
     event.preventDefault()
-    currentVertex = null
     isDragging = false
+}
+
+function updateVertexPosition() {
+    updateVertexCoordsEndpoint(currentVertex.id, currentVertex.x, currentVertex.y)
+        .then(() => {
+            console.log('Updated vertex position: ' + currentVertex.id)
+            currentVertex = null
+        })
 }
 
 function handleMouseMove(event) {
