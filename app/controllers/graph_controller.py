@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_login import login_required
 
 from app.services import graph_service
 
@@ -94,6 +95,7 @@ graph_controller: GraphController = GraphController(service=graph_service)
 
 
 @graph_bp.route(rule='/', methods=['POST', 'DELETE', 'GET', 'PUT'])
+@login_required
 def graph_endpoints():
     if request.method == 'POST':
         return graph_controller.handle_create_graph_request(request)
@@ -106,6 +108,7 @@ def graph_endpoints():
 
 
 @graph_bp.route(rule='/vertex', methods=['POST', 'DELETE', 'PUT'])
+@login_required
 def vertex_endpoints():
     if request.method == 'POST':
         return graph_controller.handle_create_vertex_request(request)
@@ -116,6 +119,7 @@ def vertex_endpoints():
 
 
 @graph_bp.route(rule='/edge', methods=['POST', 'DELETE'])
+@login_required
 def edge_endpoints():
     if request.method == 'POST':
         return graph_controller.handle_create_edge_request(request)
