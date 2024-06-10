@@ -1,7 +1,7 @@
 import random
 
 from app.app import db
-from app.models import Vertex, Graph, Edge
+from app.models import Vertex, Graph, Edge, User
 
 
 def get_test_vertex_no_db():
@@ -26,7 +26,15 @@ def get_test_vertex_with_graph_id_in_db(graph_id):
 
 
 def get_empty_test_graph_in_db():
+    new_user = User()
+    new_user.id = 1
+    new_user.email = 'testmail'
+    new_user.name = 'testname'
+    new_user.password = 'testpassword'
+    db.session.add(new_user)
+
     graph = Graph(name="test_graph" + str(random.randint(0, 10000)))
+    graph.user_id = new_user.id
     db.session.add(graph)
     db.session.commit()
     return db.session.query(Graph).filter_by(name=graph.name).first()

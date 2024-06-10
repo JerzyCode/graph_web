@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 
 from app.app import db
-from app.utils.constants import VERTEX_ID_COLUMN, VERTEX_TABLE_NAME, EDGE_TABLE_NAME, GRAPH_TABLE_NAME, USER_TABLE_NAME
+from app.utils.constants import VERTEX_ID_COLUMN, VERTEX_TABLE_NAME, EDGE_TABLE_NAME, GRAPH_TABLE_NAME, USER_TABLE_NAME, USER_ID_COLUMN
 
 neighbors_table = db.Table('neighbors_table',
                            db.Column('vertex_id', db.Integer, db.ForeignKey(VERTEX_ID_COLUMN), primary_key=True),
@@ -67,6 +67,7 @@ class Graph(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
+    user_id = db.Column(db.Integer, db.ForeignKey(USER_ID_COLUMN), nullable=False)
     edges = db.relationship('Edge', lazy='dynamic', cascade='all, delete-orphan')
     vertices = db.relationship('Vertex', lazy='dynamic', cascade='all, delete-orphan')
 
@@ -83,3 +84,4 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
+    graphs = db.relationship('Graph', backref='user', lazy='dynamic', cascade='all, delete-orphan')
