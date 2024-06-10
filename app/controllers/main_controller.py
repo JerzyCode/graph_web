@@ -3,7 +3,7 @@ from flask import render_template, Blueprint
 from app.app import db
 from app.models import Graph
 
-main_bp = Blueprint('index', __name__, url_prefix='/')
+main_bp = Blueprint('main', __name__, url_prefix='/')
 
 
 @main_bp.route('/home')
