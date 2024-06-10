@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.app import db
@@ -24,7 +25,9 @@ def login_post():
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
 
-    return redirect(url_for('main.main_page'))
+    login_user(user, remember=remember)
+
+    return redirect(url_for('main.main_graph_panel'))
 
 
 @auth_bp.route('/signup')
@@ -51,5 +54,7 @@ def signup_post():
 
 
 @auth_bp.route('/logout')
+@login_required
 def logout():
-    return "logout"
+    logout_user()
+    return redirect(url_for("main.welcome_page"))

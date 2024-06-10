@@ -1,3 +1,5 @@
+from flask_login import UserMixin
+
 from app.app import db
 from app.utils.constants import VERTEX_ID_COLUMN, VERTEX_TABLE_NAME, EDGE_TABLE_NAME, GRAPH_TABLE_NAME, USER_TABLE_NAME
 
@@ -74,7 +76,7 @@ class Graph(db.Model):
         self.vertices = []
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = USER_TABLE_NAME
 
     id = db.Column(db.Integer, primary_key=True)
