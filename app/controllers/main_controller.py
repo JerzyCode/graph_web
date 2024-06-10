@@ -14,7 +14,8 @@ def welcome_page():
 
 @main_bp.route('/getAllGraphs')
 def render_graphs_popup():
-    graphs = db.session.query(Graph).all()
+    user_id = current_user.id
+    graphs = db.session.query(Graph).filter_by(user_id=user_id).all()
     graphs_data = [{'id': graph.id, 'name': graph.name} for graph in graphs]
     return render_template('load_graph_popup.html', graphs=graphs_data)
 
