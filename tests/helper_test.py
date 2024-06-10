@@ -33,7 +33,7 @@ def get_empty_test_graph_in_db():
     new_user.password = 'testpassword'
     db.session.add(new_user)
 
-    graph = Graph(name="test_graph" + str(random.randint(0, 10000)))
+    graph = Graph(name="test_graph" + str(random.randint(0, 10000)), user_id=1)
     graph.user_id = new_user.id
     db.session.add(graph)
     db.session.commit()

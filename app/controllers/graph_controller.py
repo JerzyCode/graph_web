@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from app.services import graph_service
 
@@ -15,7 +15,8 @@ class GraphController:
         if graph_name is None:
             return 'No graph name provided', 400
         else:
-            graph_id = self._service.create_empty_graph(graph_name=graph_name)
+            user_id = current_user.id
+            graph_id = self._service.create_empty_graph(graph_name=graph_name, user_id=user_id)
             return {'graph_id': graph_id}, 200
 
     def handle_delete_graph_request(self, req):

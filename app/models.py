@@ -71,7 +71,8 @@ class Graph(db.Model):
     edges = db.relationship('Edge', lazy='dynamic', cascade='all, delete-orphan')
     vertices = db.relationship('Vertex', lazy='dynamic', cascade='all, delete-orphan')
 
-    def __init__(self, name):
+    def __init__(self, name, user_id):
+        self.user_id = user_id
         self.name = name
         self.edges = []
         self.vertices = []

@@ -11,8 +11,9 @@ def test_create_graph(app):
     with app.app_context():
         # given
         graph_name = 'test_graph'
+        user_id = 2
         # when
-        graph_service.create_empty_graph(graph_name=graph_name)
+        graph_service.create_empty_graph(graph_name=graph_name, user_id=user_id)
         # then
         saved_graph = db.session.query(Graph).filter_by(name=graph_name).first()
         assert saved_graph is not None
