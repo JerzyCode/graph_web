@@ -24,25 +24,19 @@ class GraphController:
 
     def handle_delete_graph_request(self, req):
         graph_id = req.args.get('graph_id')
-        if graph_id is None:
-            return 'No graph_id provided', 400
-        else:
-            self._service.delete_graph(graph_id=graph_id)
-            return "Graph successfully deleted", 200
+        self._service.delete_graph(graph_id=graph_id)
+        return "Graph successfully deleted", 200
 
     def handle_get_graph_request(self, req):
         graph_id = req.args.get('graph_id')
-        if graph_id is None:
-            return 'No graph_id provided', 400
-        else:
-            graph_dto = self._service.get_graph_by_id(graph_id=graph_id)
-            return jsonify(graph_dto.map_to_dictionary()), 200
+        graph_dto = self._service.get_graph_by_id(graph_id=graph_id)
+        return jsonify(graph_dto.map_to_dictionary()), 200
 
     def handle_put_graph_request(self, req):
         graph_id = req.args.get('graph_id')
         new_name = req.args.get('name')
-        if graph_id is None or new_name is None:
-            return 'No graph_id or name provided', 400
+        if new_name is None:
+            return 'No name provided', 400
         else:
             self._service.update_graph_name(graph_id=graph_id, new_graph_name=new_name)
             return 'Updated graph name', 200
@@ -51,8 +45,8 @@ class GraphController:
         graph_id = req.args.get('graph_id')
         vertex_x = req.args.get('x')
         vertex_y = req.args.get('y')
-        if graph_id is None or vertex_x is None or vertex_y is None:
-            return 'No graph_id, x or y provided', 400
+        if vertex_x is None or vertex_y is None:
+            return 'No x or y provided', 400
         else:
             created_vertex = self._service.add_vertex_to_graph(graph_id=graph_id, vertex_x=vertex_x, vertex_y=vertex_y)
             return jsonify(created_vertex.to_dict()), 200
@@ -60,8 +54,8 @@ class GraphController:
     def handle_delete_vertex_request(self, req):
         graph_id = req.args.get('graph_id')
         vertex_id = req.args.get('vertex_id')
-        if graph_id is None:
-            return 'No graph_id or vertex_id provided', 400
+        if vertex_id is None:
+            return 'No vertex_id provided', 400
         else:
             self._service.delete_vertex_from_graph(graph_id=graph_id, vertex_id=vertex_id)
             return 'Deleted vertex', 200

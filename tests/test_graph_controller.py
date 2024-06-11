@@ -21,7 +21,7 @@ def test_post_graph_endpoint_should_return_200(client):
 def test_post_graph_endpoint_should_return_404(client):
     with patch('app.services.graph_service.create_empty_graph') as mock_graph_service:
         # given
-        with patch('flask_login.utils._get_user', return_value=User(id=1)):
+        with patch('flask_login.utils._get_user', return_value=User()):
             # when
             response = client.post('/graph/', query_string={'wrong_key': 'test_graph_name'})
             # then
@@ -137,7 +137,7 @@ def test_delete_vertex_should_return_200(client, app):
             graph = helper_test.get_empty_test_graph_in_db()
         # when
         with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
-            response = client.delete('/graph/vertex', query_string={'graph_id': graph.id})
+            response = client.delete('/graph/vertex', query_string={'graph_id': graph.id, 'vertex_id': 1})
         # then
         assert response.status_code == 200
         mock_graph_service.assert_called_once()
