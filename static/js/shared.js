@@ -9,15 +9,20 @@ if (logoutButton) {
     logoutButton.addEventListener('click', async () => {
         try {
             await fetch(`/logout`, {})
-            console.log('test123')
-            window.location.href = './home'
-            showNotification()
-
+            showSuccessMessage('Logout')
+            setTimeout(() => {
+                window.location.href = './home'
+            }, 1500);
         } catch (error) {
             console.error('There was a problem with logout:', error);
+            showFailMessage('Error occurred login out')
             throw error;
         }
     })
+}
+
+async function changeLocation() {
+    window.location.href = './home'
 }
 
 function showNotification(message, color) {
