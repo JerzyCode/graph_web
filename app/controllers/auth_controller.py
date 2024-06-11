@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, redirect, url_for, request, flash
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -6,11 +6,6 @@ from app.app import db
 from app.models import User
 
 auth_bp = Blueprint('auth', __name__)
-
-
-@auth_bp.route('/login')
-def login():
-    return render_template('login.html')
 
 
 @auth_bp.route('/login', methods=['POST'])
@@ -30,21 +25,17 @@ def login_post():
     return redirect(url_for('main.main_graph_panel'))
 
 
-@auth_bp.route('/signup')
-def signup():
-    return render_template('signup.html')
-
-
 @auth_bp.route('/signup', methods=['POST'])
 def signup_post():
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')
+    password_again = request.form.get('password-again')
 
     user = db.session.query(User).filter_by(email=email).first()
-    if user:
+    if user or password_again != password:
         flash('Email address already exists')
-        return redirect(url_for('auth.signup'))
+        return redirect(url_for('main.welcome_page'))
 
     new_user = User()
     new_user.email = email
@@ -54,7 +45,7 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('main.welcome_page'))
 
 
 @auth_bp.route('/logout')

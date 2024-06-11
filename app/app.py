@@ -14,10 +14,10 @@ def create_app(db_url='sqlite:///app.db'):
     db.init_app(app)
 
     login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
     from app.models import User
+
     @login_manager.user_loader
     def load_user(user_id):
         return db.session.query(User).get(int(user_id))

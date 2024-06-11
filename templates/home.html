@@ -22,11 +22,11 @@
                 <form method="POST" action="/login">
                     <div class="inputs">
                         <div class="field">
-                            <input class="input" type="email" name="email" placeholder="Your Email" autofocus="">
+                            <input class="input" type="email" name="email" placeholder="Your Email" autofocus="" autocomplete="email">
                         </div>
 
                         <div class="field">
-                            <input class="input" type="password" name="password" placeholder="Your Password">
+                            <input class="input" type="password" name="password" placeholder="Your Password" autocomplete="new-password">
                         </div>
                         <div class="field">
                             <label class="checkbox">
@@ -48,16 +48,16 @@
                 <form method="POST" action="/signup">
                     <div class="inputs">
                         <div class="field">
-                            <input class="input" type="email" name="email" placeholder="Your Email" autofocus="">
+                            <input class="input" type="email" name="email" placeholder="Your Email" autofocus="" autocomplete="email">
                         </div>
 
                         <div class="field">
-                            <input class="input" type="password" name="password" placeholder="Your Password">
+                            <input class="input" type="password" name="password" placeholder="Your Password" autocomplete="new-password">
                         </div>
 
                         <div class="field">
                             <input class="input" type="password" name="password-again"
-                                   placeholder="Your Password Again">
+                                   placeholder="Your Password Again" autocomplete="new-password">
                         </div>
                     </div>
                     <div class="form-buttons">
@@ -75,5 +75,5 @@
 </div>
 </body>
 <script type="module" src="../static/js/home.js"></script>
-
+<script type="module" src="../static/js/shared.js"></script>
 </html>
