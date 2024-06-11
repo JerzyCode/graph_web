@@ -1,5 +1,7 @@
 import random
 
+from werkzeug.security import generate_password_hash
+
 from app.app import db
 from app.models import Vertex, Graph, Edge, User
 
@@ -82,3 +84,18 @@ def get_test_vertex_with_two_neighbors_in_db():
     db.session.add(vertex)
     db.session.commit()
     return db.session.get(Vertex, vertex.id)
+
+
+def prepare_test_user_no_db():
+    user = User()
+    user.email = 'test@mail.com'
+    user.name = 'name'
+    user.password = generate_password_hash('testpassword')
+    return user
+
+
+def prepare_test_user_in_db():
+    user = prepare_test_user_no_db()
+    db.session.add(user)
+    db.session.commit()
+    return user
