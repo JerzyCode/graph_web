@@ -42,8 +42,6 @@ def _is_password_proper_size(password: str):
 
 def login_user_req(email: str, password: str, remember_me: bool):
     user = db.session.query(User).filter_by(email=email).first()
-    print(password)
-    print(user.password)
     if not _is_valid_password(user.password, password):
         raise PasswordsDoNotMatchException
 

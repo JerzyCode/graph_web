@@ -1,6 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from flask_login import login_required, current_user
 
+from app.app import db
+from app.models import Graph
 from app.services import graph_service
 
 graph_bp = Blueprint('graph', __name__, url_prefix='/graph/')
@@ -129,3 +131,11 @@ def edge_endpoints():
         return graph_controller.handle_create_edge_request(request)
     elif request.method == 'DELETE':
         return graph_controller.handle_delete_edge_request(request)
+
+
+@graph_bp.route('/getAllGraphs')
+def render_graphs_popup():
+    user_id = current_user.id
+    graphs = db.session.query(Graph).filter_by(user_id=user_id).all()
+    graphs_data = [{'id': graph.id, 'name': graph.name} for graph in graphs]
+    return render_template('load_graph_popup.html', graphs=graphs_data)
