@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from app.models import Vertex, Edge, User
 from app.utils.dto import GraphDTO
+from tests import helper_test
 
 
 def test_post_graph_endpoint_should_return_200(client):
@@ -157,12 +158,15 @@ def test_put_vertex_should_return_400(client):
         mock_graph_service.assert_not_called()
 
 
-def test_post_edge_should_return_200(client):
+def test_post_edge_should_return_200(client, app):
     with patch('app.services.graph_service.add_edge_to_graph') as mock_graph_service:
         # given
-        mock_graph_service.return_value = Edge(vertex_in=Vertex(0, 0, 1), vertex_out=Vertex(0, 0, 1), graph_id=1)
+        with app.app_context():
+            graph = helper_test.get_empty_test_graph_in_db()
+        mock_graph_service.return_value = Edge(vertex_in=Vertex(0, 0, graph.id), vertex_out=Vertex(0, 0, graph.id), graph_id=graph.id)
         # when
-        response = client.post('/graph/edge', query_string={'graph_id': 1, 'vertex_in_id': 1, 'vertex_out_id': 2})
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+            response = client.post('/graph/edge', query_string={'graph_id': graph.id, 'vertex_in_id': 1, 'vertex_out_id': 2})
         # then
         assert response.status_code == 200
         mock_graph_service.assert_called_once()
@@ -178,12 +182,16 @@ def test_post_edge_should_return_400(client):
         mock_graph_service.assert_not_called()
 
 
-def test_delete_edge_should_return_200(client):
-    with patch('app.services.graph_service.delete_edge_from_graph') as mock_graph_service:
-        # given
-        # when
-        response = client.delete('/graph/edge', query_string={'edge_id': 1})
-        # then
+def test_delete_edge_should_return_200(client, app):
+    # given
+    with app.app_context():
+        graph = helper_test.get_test_graph_with_edges_in_db()
+        edge_to_delete = graph.edges.first()
+    # when
+    with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+        with patch('app.services.graph_service.delete_edge_from_graph') as mock_graph_service:
+            response = client.delete('/graph/edge', query_string={'edge_id': edge_to_delete.id, 'graph_id': graph.id})
+            # then
         assert response.status_code == 200
         mock_graph_service.assert_called_once()
 

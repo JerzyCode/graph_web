@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from app.app import db
 from app.models import Graph
 from app.services import graph_service
+from app.utils.request_validator import validate_request
 
 graph_bp = Blueprint('graph', __name__, url_prefix='/graph/')
 
@@ -67,8 +68,6 @@ class GraphController:
 
     def handle_put_vertex_request(self, req):
         vertex_id = req.args.get('vertex_id')
-        graph_id = req.args.get('graph_id')
-
         new_x_position = req.args.get('x')
         new_y_position = req.args.get('y')
         if vertex_id is None or new_x_position is None or new_y_position is None:
@@ -81,7 +80,7 @@ class GraphController:
         graph_id = req.args.get('graph_id')
         vertex_in_id = req.args.get('vertex_in_id')
         vertex_out_id = req.args.get('vertex_out_id')
-        if graph_id is None or vertex_in_id is None or vertex_out_id is None:
+        if vertex_in_id is None or vertex_out_id is None:
             return 'No graph_id, vertex_out_id vertex_in_id y provided', 400
         else:
             created_edge = self._service.add_edge_to_graph(graph_id=graph_id, vertex_in_id=vertex_in_id, vertex_out_id=vertex_out_id)
@@ -89,7 +88,6 @@ class GraphController:
 
     def handle_delete_edge_request(self, req):
         edge_id = req.args.get('edge_id')
-        graph_id = req.args.get('graph_id')
         if edge_id is None:
             return 'No edge_id provided', 400
         else:
@@ -126,6 +124,7 @@ def vertex_endpoints():
 
 @graph_bp.route(rule='/edge', methods=['POST', 'DELETE'])
 @login_required
+@validate_request
 def edge_endpoints():
     if request.method == 'POST':
         return graph_controller.handle_create_edge_request(request)

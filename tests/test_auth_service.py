@@ -5,7 +5,7 @@ import pytest
 from app.models import User
 from app.services import auth_service
 from app.utils.exceptions import EmailTakenException, InvalidPasswordException, PasswordsDoNotMatchException
-from tests.helper_test import prepare_test_user_no_db, prepare_test_user_in_db
+from tests.helper_test import prepare_test_user_no_db, prepare_test_user_in_db, TEST_USER_PASSWORD
 
 
 def test_create_user_should_create_new_user(app):
@@ -64,7 +64,7 @@ def test_should_login_user_with_correct_credentials(app):
     with app.app_context():
         # given
         remember_me = True
-        no_hashed_password = 'testpassword'
+        no_hashed_password = TEST_USER_PASSWORD
         saved_user = prepare_test_user_in_db()
 
         # when
@@ -78,7 +78,7 @@ def test_should_login_user_with_incorrect_credentials_should_throw(app):
     with app.app_context():
         # given
         remember_me = True
-        no_hashed_password = 'testpasswordWrong'
+        no_hashed_password = TEST_USER_PASSWORD + 'changed'
         saved_user = prepare_test_user_in_db()
 
         # when & then

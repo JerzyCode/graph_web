@@ -1,9 +1,13 @@
 import random
+from unittest.mock import MagicMock
 
 from werkzeug.security import generate_password_hash
 
 from app.app import db
 from app.models import Vertex, Graph, Edge, User
+
+TEST_USER_ID = random.randint(0, 5000)
+TEST_USER_PASSWORD = 'test_password'
 
 
 def get_test_vertex_no_db():
@@ -29,10 +33,10 @@ def get_test_vertex_with_graph_id_in_db(graph_id):
 
 def get_empty_test_graph_in_db():
     new_user = User()
-    new_user.id = 1
+    new_user.id = TEST_USER_ID
     new_user.email = 'testmail'
     new_user.name = 'testname'
-    new_user.password = 'testpassword'
+    new_user.password = TEST_USER_PASSWORD
     db.session.add(new_user)
 
     graph = Graph(name="test_graph" + str(random.randint(0, 10000)), user_id=1)
@@ -90,7 +94,7 @@ def prepare_test_user_no_db():
     user = User()
     user.email = 'test@mail.com'
     user.name = 'name'
-    user.password = generate_password_hash('testpassword')
+    user.password = generate_password_hash(TEST_USER_PASSWORD)
     return user
 
 
@@ -99,3 +103,9 @@ def prepare_test_user_in_db():
     db.session.add(user)
     db.session.commit()
     return user
+
+
+def get_mock_user():
+    mock_user = MagicMock()
+    mock_user.id = TEST_USER_ID
+    return mock_user
