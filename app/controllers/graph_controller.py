@@ -98,17 +98,23 @@ class GraphController:
 graph_controller: GraphController = GraphController(service=graph_service)
 
 
-@graph_bp.route(rule='/', methods=['POST', 'DELETE', 'GET', 'PUT'])
+@graph_bp.route(rule='/', methods=['DELETE', 'GET', 'PUT'])
 @login_required
+@validate_request
 def graph_endpoints():
-    if request.method == 'POST':
-        return graph_controller.handle_create_graph_request(request)
-    elif request.method == 'DELETE':
+    if request.method == 'DELETE':
         return graph_controller.handle_delete_graph_request(request)
     elif request.method == 'GET':
         return graph_controller.handle_get_graph_request(request)
     elif request.method == 'PUT':
         return graph_controller.handle_put_graph_request(request)
+
+
+@graph_bp.route(rule='/', methods=['POST'])
+@login_required
+def post_graph_endpoint():
+    if request.method == 'POST':
+        return graph_controller.handle_create_graph_request(request)
 
 
 @graph_bp.route(rule='/vertex', methods=['POST', 'DELETE', 'PUT'])

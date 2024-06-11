@@ -8,14 +8,14 @@ from tests import helper_test
 
 def test_post_graph_endpoint_should_return_200(client):
     with patch('app.services.graph_service.create_empty_graph') as mock_graph_service:
-        with patch('flask_login.utils._get_user', return_value=User(id=1)):
-            # given
-            mock_graph_service.return_value = 123
-            # when
+        # given
+        mock_graph_service.return_value = 123
+        # when
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
             response = client.post('/graph/', query_string={'graph_name': 'test_graph_name'})
-            # then
-            assert response.status_code == 200
-            mock_graph_service.assert_called_once()
+        # then
+        assert response.status_code == 200
+        mock_graph_service.assert_called_once()
 
 
 def test_post_graph_endpoint_should_return_404(client):
@@ -29,11 +29,14 @@ def test_post_graph_endpoint_should_return_404(client):
             mock_graph_service.assert_not_called()
 
 
-def test_delete_graph_endpoint_should_return_200(client):
+def test_delete_graph_endpoint_should_return_200(client, app):
     with patch('app.services.graph_service.delete_graph') as mock_graph_service:
         # given
+        with app.app_context():
+            graph = helper_test.get_empty_test_graph_in_db()
         # when
-        response = client.delete('/graph/', query_string={'graph_id': 1})
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+            response = client.delete('/graph/', query_string={'graph_id': graph.id})
         # then
         assert response.status_code == 200
         mock_graph_service.assert_called_once()
@@ -49,13 +52,16 @@ def test_delete_graph_endpoint_should_return_404(client):
         mock_graph_service.assert_not_called()
 
 
-def test_get_graph_endpoint_should_return_200(client):
+def test_get_graph_endpoint_should_return_200(client, app):
     with patch('app.services.graph_service.get_graph_by_id') as mock_graph_service:
         # given
+        with app.app_context():
+            graph = helper_test.get_empty_test_graph_in_db()
         graph_dto = GraphDTO(1, name='test_graph', vertices=[], edges=[])
         mock_graph_service.return_value = graph_dto
         # when
-        response = client.get('/graph/', query_string={'graph_id': 1})
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+            response = client.get('/graph/', query_string={'graph_id': graph.id})
         # then
         data = json.loads(response.data)
         assert response.status_code == 200
@@ -67,11 +73,14 @@ def test_get_graph_endpoint_should_return_200(client):
         mock_graph_service.assert_called_once()
 
 
-def test_put_graph_endpoint_should_return_200(client):
+def test_put_graph_endpoint_should_return_200(client, app):
     with patch('app.services.graph_service.update_graph_name') as mock_graph_service:
         # given
+        with app.app_context():
+            graph = helper_test.get_empty_test_graph_in_db()
         # when
-        response = client.put('/graph/', query_string={'graph_id': 1, 'name': 'updated_name'})
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+            response = client.put('/graph/', query_string={'graph_id': graph.id, 'name': 'updated_name'})
         # then
         assert response.status_code == 200
         mock_graph_service.assert_called_once()
