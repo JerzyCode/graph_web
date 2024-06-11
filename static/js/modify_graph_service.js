@@ -140,6 +140,7 @@ export function createGraph(graphName) {
             closeCreateGraphPopup()
             loadGraphOnCanvas(graphId)
                 .then(() => {
+                    currentLoadedGraph.graphId = graphId
                     showSuccessMessage('Successfully created graph!')
                 })
         })
