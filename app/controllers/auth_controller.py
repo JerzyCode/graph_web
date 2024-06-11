@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.app import db
 from app.models import User
+from app.utils.constants import WELCOME_PAGE_URL
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -17,8 +18,8 @@ def login_post():
     user = db.session.query(User).filter_by(email=email).first()
 
     if not user or not check_password_hash(user.password, password):
-        flash('Please check your login details and try again.')
-        return redirect(url_for('auth.login'))
+        flash('login-flash')
+        return redirect(url_for(WELCOME_PAGE_URL))
 
     login_user(user, remember=remember)
 
@@ -33,9 +34,14 @@ def signup_post():
     password_again = request.form.get('password-again')
 
     user = db.session.query(User).filter_by(email=email).first()
-    if user or password_again != password:
-        flash('Email address already exists')
-        return redirect(url_for('main.welcome_page'))
+
+    if user:
+        flash('signup-email-taken-flash')
+        return redirect(url_for(WELCOME_PAGE_URL))
+
+    if password != password_again:
+        flash('signup-password-do-not-match')
+        return redirect(url_for(WELCOME_PAGE_URL))
 
     new_user = User()
     new_user.email = email
@@ -45,11 +51,11 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for('main.welcome_page'))
+    return redirect(url_for(WELCOME_PAGE_URL))
 
 
 @auth_bp.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("main.welcome_page"))
+    return redirect(url_for(WELCOME_PAGE_URL))

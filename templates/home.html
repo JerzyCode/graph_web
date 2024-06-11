@@ -20,6 +20,10 @@
             <div class="popup-content">
                 <h3>Login</h3>
                 <form method="POST" action="/login">
+                    <div id="fail-message-comp-login" class="fail-message form" data-flash-message="{{ get_flashed_messages()|safe }}"> Wrong username
+                        or
+                        password.
+                    </div>
                     <div class="inputs">
                         <div class="field">
                             <input class="input" type="email" name="email" placeholder="Your Email" autofocus="" autocomplete="email">
@@ -46,6 +50,7 @@
             <div class="popup-content">
                 <h3>Sign Up</h3>
                 <form method="POST" action="/signup">
+                    <div id="fail-message-comp-signup" class="fail-message form" data-flash-message="{{ get_flashed_messages()|safe }}"></div>
                     <div class="inputs">
                         <div class="field">
                             <input class="input" type="email" name="email" placeholder="Your Email" autofocus="" autocomplete="email">
