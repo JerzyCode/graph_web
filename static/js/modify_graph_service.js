@@ -16,8 +16,9 @@ import {
     markVertexSelected,
     unmarkSelectedVertices
 } from "./canvas.js";
-import {closeCreateGraphPopup, showFailMessage, showSuccessMessage} from "./graph_panel.js";
+import {closeCreateGraphPopup} from "./graph_panel.js";
 import {closeDeleteConfirmPopup, removeItemFromList} from "./your_graphs_popup.js";
+import {showFailMessage, showSuccessMessage} from "./shared.js";
 
 
 export const addVertexParams = {}

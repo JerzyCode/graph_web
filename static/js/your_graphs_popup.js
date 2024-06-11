@@ -1,6 +1,6 @@
 import {loadGraphOnCanvas} from "./canvas.js";
-import {showSuccessMessage} from "./graph_panel.js";
 import {currentLoadedGraph, deleteGraph} from "./modify_graph_service.js";
+import {showSuccessMessage} from "./shared.js";
 
 
 export function openYourGraphsPopup() {
