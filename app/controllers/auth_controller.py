@@ -1,57 +1,55 @@
 from flask import Blueprint, redirect, url_for, request, flash
-from flask_login import login_user, login_required, logout_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_required, logout_user
 
-from app.app import db
-from app.models import User
-from app.utils.constants import WELCOME_PAGE_URL
+from app.services import auth_service
+from app.utils.constants import WELCOME_PAGE_URL, GRAPH_PANEL_URL
+from app.utils.exceptions import EmailTakenException, InvalidPasswordException, PasswordsDoNotMatchException
 
 auth_bp = Blueprint('auth', __name__)
 
 
-@auth_bp.route('/login', methods=['POST'])
-def login_post():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    remember = True if request.form.get('remember') else False
+class AuthController:
 
-    user = db.session.query(User).filter_by(email=email).first()
-
-    if not user or not check_password_hash(user.password, password):
-        flash('login-flash')
+    @staticmethod
+    def handle_signup_request(signup_request):
+        email = signup_request.form.get('email')
+        name = signup_request.form.get('name')
+        password = signup_request.form.get('password')
+        password_again = signup_request.form.get('password-again')
+        try:
+            auth_service.create_new_user(email, name, password, password_again)
+        except EmailTakenException:
+            flash('signup-email-taken-flash')
+            return redirect(url_for(WELCOME_PAGE_URL))
+        except InvalidPasswordException:
+            flash('signup-password-do-not-match')
+            return redirect(url_for(WELCOME_PAGE_URL))
         return redirect(url_for(WELCOME_PAGE_URL))
 
-    login_user(user, remember=remember)
+    @staticmethod
+    def handle_login_request(login_request):
+        email = login_request.form.get('email')
+        password = login_request.form.get('password')
+        remember = True if request.form.get('remember') else False
+        try:
+            auth_service.login_user_req(email, password, remember)
+        except PasswordsDoNotMatchException:
+            flash('login-flash')
+            return redirect(url_for(WELCOME_PAGE_URL))
+        return redirect(url_for(GRAPH_PANEL_URL))
 
-    return redirect(url_for('main.main_graph_panel'))
+
+auth_controller = AuthController()
+
+
+@auth_bp.route('/login', methods=['POST'])
+def login_post():
+    return auth_controller.handle_login_request(request)
 
 
 @auth_bp.route('/signup', methods=['POST'])
 def signup_post():
-    email = request.form.get('email')
-    name = request.form.get('name')
-    password = request.form.get('password')
-    password_again = request.form.get('password-again')
-
-    user = db.session.query(User).filter_by(email=email).first()
-
-    if user:
-        flash('signup-email-taken-flash')
-        return redirect(url_for(WELCOME_PAGE_URL))
-
-    if password != password_again:
-        flash('signup-password-do-not-match')
-        return redirect(url_for(WELCOME_PAGE_URL))
-
-    new_user = User()
-    new_user.email = email
-    new_user.name = name
-    new_user.password = generate_password_hash(password)
-
-    db.session.add(new_user)
-    db.session.commit()
-
-    return redirect(url_for(WELCOME_PAGE_URL))
+    return auth_controller.handle_signup_request(request)
 
 
 @auth_bp.route('/logout')
