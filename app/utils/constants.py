@@ -12,3 +12,5 @@ USER_ID_COLUMN = 'user_table.id'
 
 WELCOME_PAGE_URL = 'main.welcome_page'
 GRAPH_PANEL_URL = 'main.main_graph_panel'
+
+MAX_GRAPHS_PER_USER = 100

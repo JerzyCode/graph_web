@@ -1,9 +1,13 @@
 import random
+from unittest.mock import patch
+
+import pytest
 
 from app.app import db
 from app.models import Graph, Vertex, Edge
 from app.services import graph_service
 from app.utils.dto import GraphDTO
+from app.utils.exceptions import UserGraphCountExceededException
 from tests import helper_test
 
 
@@ -13,12 +17,26 @@ def test_create_graph(app):
         graph_name = 'test_graph'
         user_id = 2
         # when
-        graph_service.create_empty_graph(graph_name=graph_name, user_id=user_id)
+        with patch('app.services.graph_validation_service.is_user_able_to_create_graph', return_value=True) as validator:
+            graph_service.create_empty_graph(graph_name=graph_name, user_id=user_id)
         # then
+        validator.assert_called_once()
         saved_graph = db.session.query(Graph).filter_by(name=graph_name).first()
         assert saved_graph is not None
         assert saved_graph.edges.count() == 0
         assert saved_graph.vertices.count() == 0
+
+
+def test_create_graph_exceed_graphs_limit(app):
+    # given
+    graph_name = 'test_graph'
+    user_id = 2
+    # when
+    with pytest.raises(UserGraphCountExceededException):
+        with patch('app.services.graph_validation_service.is_user_able_to_create_graph', return_value=False) as validator:
+            graph_service.create_empty_graph(graph_name=graph_name, user_id=user_id)
+    # then
+    validator.assert_called_once()
 
 
 def test_delete_empty_graph(app):

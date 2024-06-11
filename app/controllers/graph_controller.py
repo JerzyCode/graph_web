@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from app.app import db
 from app.models import Graph
 from app.services import graph_service
+from app.utils.exceptions import UserGraphCountExceededException
 from app.utils.request_validator import validate_request
 
 graph_bp = Blueprint('graph', __name__, url_prefix='/graph/')
@@ -19,7 +20,10 @@ class GraphController:
             return 'No graph name provided', 400
         else:
             user_id = current_user.id
-            graph_id = self._service.create_empty_graph(graph_name=graph_name, user_id=user_id)
+            try:
+                graph_id = self._service.create_empty_graph(graph_name=graph_name, user_id=user_id)
+            except UserGraphCountExceededException as ex:
+                return ex.message, 400
             return {'graph_id': graph_id}, 200
 
     def handle_delete_graph_request(self, req):

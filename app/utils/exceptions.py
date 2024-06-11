@@ -11,3 +11,9 @@ class InvalidPasswordException(Exception):
 class PasswordsDoNotMatchException(Exception):
     def __init__(self):
         self.message = "Passwords do not match."
+
+
+class UserGraphCountExceededException(Exception):
+
+    def __init__(self):
+        self.message = "User exceed graph count. Max number of graphs per user is 100"

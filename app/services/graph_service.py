@@ -1,11 +1,15 @@
 from app.models import Graph, Vertex, Edge
 from app.services import edge_service
+from app.services import graph_validation_service as validator
 from app.services import vertex_service
 from app.utils import database_util as db_util
 from app.utils.dto import GraphDTO
+from app.utils.exceptions import UserGraphCountExceededException
 
 
 def create_empty_graph(graph_name, user_id):
+    if not validator.is_user_able_to_create_graph(user_id):
+        raise UserGraphCountExceededException
     graph = Graph(graph_name, user_id)
     db_util.save_data_in_db(graph)
     return graph.id

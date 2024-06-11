@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from app.models import Vertex, Edge, User
 from app.utils.dto import GraphDTO
+from app.utils.exceptions import UserGraphCountExceededException
 from tests import helper_test
 
 
@@ -27,6 +28,18 @@ def test_post_graph_endpoint_should_return_404(client):
             # then
             assert response.status_code == 400
             mock_graph_service.assert_not_called()
+
+
+def test_post_graph_endpoint_should_return_400(client):
+    with patch('app.services.graph_service.create_empty_graph') as mock_graph_service:
+        # given
+        mock_graph_service.side_effect = UserGraphCountExceededException
+        # when
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+            response = client.post('/graph/', query_string={'graph_name': 'test_graph_name'})
+        # then
+        assert response.status_code == 400
+        mock_graph_service.assert_called_once()
 
 
 def test_delete_graph_endpoint_should_return_200(client, app):
