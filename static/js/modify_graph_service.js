@@ -16,8 +16,9 @@ import {
     markVertexSelected,
     unmarkSelectedVertices
 } from "./canvas.js";
-import {closeCreateGraphPopup, showFailMessage, showSuccessMessage} from "./main.js";
+import {closeCreateGraphPopup} from "./graph_panel.js";
 import {closeDeleteConfirmPopup, removeItemFromList} from "./your_graphs_popup.js";
+import {showFailMessage, showSuccessMessage} from "./shared.js";
 
 
 export const addVertexParams = {}
@@ -119,8 +120,9 @@ function resetAddEdgeParams() {
 
 export async function deleteEdge() {
     let edgeId = deleteEdgeParams.edgeId
+    let graphId = currentLoadedGraph.graphId
 
-    deleteEdgeEndpoint(edgeId)
+    deleteEdgeEndpoint(graphId, edgeId)
         .then(() => {
             console.debug(`Delete edge: edge_id=${edgeId}`)
             showSuccessMessage('Successfully deleted edge!')
@@ -140,6 +142,7 @@ export function createGraph(graphName) {
             closeCreateGraphPopup()
             loadGraphOnCanvas(graphId)
                 .then(() => {
+                    currentLoadedGraph.graphId = graphId
                     showSuccessMessage('Successfully created graph!')
                 })
         })

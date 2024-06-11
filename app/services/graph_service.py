@@ -5,8 +5,8 @@ from app.utils import database_util as db_util
 from app.utils.dto import GraphDTO
 
 
-def create_empty_graph(graph_name):
-    graph = Graph(graph_name)
+def create_empty_graph(graph_name, user_id):
+    graph = Graph(graph_name, user_id)
     db_util.save_data_in_db(graph)
     return graph.id
 

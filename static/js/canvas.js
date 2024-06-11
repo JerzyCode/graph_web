@@ -1,7 +1,7 @@
 import {fetchGraph, updateVertexCoordsEndpoint} from "./endpoints.js";
-import {showAddVertexPopup, showDeleteEdgePopup, showGraphActionsPopup} from "./main.js";
+import {showAddVertexPopup, showDeleteEdgePopup, showGraphActionsPopup} from "./graph_panel.js";
 import {prepareEdgesToDraw, prepareEdgeToDraw} from "./canvas_utils.js";
-import {addEdgeParams, addVertexParams, deleteEdgeParams, deleteVertexParams, selectedVertexId} from "./modify_graph_service.js";
+import {addEdgeParams, addVertexParams, currentLoadedGraph, deleteEdgeParams, deleteVertexParams, selectedVertexId} from "./modify_graph_service.js";
 
 const canvas = document.getElementById("canvas")
 const container = document.getElementById("canvas-container")
@@ -98,7 +98,7 @@ function handleStopDragging(event) {
 }
 
 function updateVertexPosition() {
-    updateVertexCoordsEndpoint(currentVertex.id, currentVertex.x, currentVertex.y)
+    updateVertexCoordsEndpoint(currentLoadedGraph.graphId, currentVertex.id, currentVertex.x, currentVertex.y)
         .then(() => {
             console.log('Updated vertex position: ' + currentVertex.id)
             currentVertex = null

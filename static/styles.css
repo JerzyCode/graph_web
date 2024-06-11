@@ -141,6 +141,7 @@ canvas {
     from {
         top: -50px;
     }
+
     to {
         top: 55px;
     }
@@ -169,6 +170,7 @@ canvas {
     from {
         width: 100%;
     }
+
     to {
         width: 0;
     }
@@ -254,4 +256,66 @@ canvas {
     color: #272640;
 }
 
+.popup-content h3 {
+    text-align: center;
+    color: #2dcebc;
+    font-size: 24px;
+}
 
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.inputs {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.field {
+    margin-bottom: 15px;
+}
+
+.input {
+    width: 100%;
+    background-color: #272640;
+    border: 1px solid #2dcebc;
+    border-radius: 5px;
+    padding: 10px;
+    color: #2dcebc;
+}
+
+.form-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+form .sidebar-button {
+    width: 50%;
+    margin: 5px 0 0;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    color: #2dcebc;
+}
+
+#popup-container-login .popup-content {
+    width: 60%;
+}
+
+.fail-message {
+    display: none;
+    padding: 5px;
+    color: red;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+}

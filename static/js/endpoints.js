@@ -73,9 +73,9 @@ export async function addEdgeEndpoint(graphId, vertexInId, vertexOutId) {
     }
 }
 
-export async function deleteEdgeEndpoint(edgeId) {
+export async function deleteEdgeEndpoint(graphId, edgeId) {
     try {
-        const response = await fetch(`/graph/edge?edge_id=${edgeId}`, {
+        const response = await fetch(`/graph/edge?edge_id=${edgeId}&graph_id=${graphId}`, {
             method: 'DELETE'
         })
 
@@ -106,9 +106,9 @@ export async function createGraphEndpoint(graphName) {
     }
 }
 
-export async function updateVertexCoordsEndpoint(vertexId, newX, newY) {
+export async function updateVertexCoordsEndpoint(graphId, vertexId, newX, newY) {
     try {
-        const response = await fetch(`/graph/vertex?vertex_id=${vertexId}&x=${newX}&y=${newY}`, {
+        const response = await fetch(`/graph/vertex?graph_id=${graphId}&vertex_id=${vertexId}&x=${newX}&y=${newY}`, {
             method: 'PUT'
         })
         if (!response.ok) {

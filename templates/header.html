@@ -1,0 +1,16 @@
+<div class="header-content">
+    <div>
+        <a class="home-anchor" href="/home"> Graph Manager</a>
+        {% if current_user.is_authenticated %}
+            <a class="panel-anchor" href="/graph_panel"> Panel</a>
+        {% endif %}
+    </div>
+    <div class="user-acc-buttons">
+        {% if current_user.is_authenticated %}
+            <button class="sidebar-button logout-button" id="logout-button"> Logout</button>
+        {% else %}
+            <button class="sidebar-button" id="login-button"> Login</button>
+            <button class="sidebar-button" id="signup-button"> Sign Up</button>
+        {% endif %}
+    </div>
+</div>

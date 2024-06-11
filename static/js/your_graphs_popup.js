@@ -1,6 +1,6 @@
 import {loadGraphOnCanvas} from "./canvas.js";
-import {showSuccessMessage} from "./main.js";
 import {currentLoadedGraph, deleteGraph} from "./modify_graph_service.js";
+import {showSuccessMessage} from "./shared.js";
 
 
 export function openYourGraphsPopup() {
@@ -11,7 +11,7 @@ export function openYourGraphsPopup() {
 
 async function loadYourGraphsPopup() {
     console.log('loadYourGraphsPopup()')
-    fetch('/getAllGraphs')
+    fetch('graph/getAllGraphs')
         .then(response => response.text())
         .then(html => {
             console.log('fetchedGraphNames...')

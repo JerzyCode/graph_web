@@ -11,6 +11,8 @@ def app():
 
     app.config['TESTING'] = True
     app.config['DEBUG'] = True
+    app.config['LOGIN_DISABLED'] = True
+
     with app.app_context():
         db.create_all()
 

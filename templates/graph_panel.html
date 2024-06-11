@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Graph Web</title>
+    <title>Graph Panel | Graph Manager</title>
     <link rel="stylesheet" href="../static/styles.css">
     <link rel="stylesheet" href="../static/popup.css">
+    <link rel="stylesheet" href="../static/header.css">
+
 
 </head>
+
 <body>
 <div class="main-container">
-    <header class="header">
-        Header
+    <header>
+        {% include 'header.html' %}
     </header>
     <div id="add-vertex-popup" class="on-canvas-popup">
         <button id="add-vertex-button" class="sidebar-button">Add Vertex</button>
@@ -55,6 +59,8 @@
         Copyright © 2024 Jerzy Boksa
     </footer>
 </div>
-<script type="module" src="../static/js/main.js"></script>
+<script type="module" src="../static/js/graph_panel.js"></script>
+<script type="module" src="../static/js/shared.js"></script>
 </body>
+
 </html>

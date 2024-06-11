@@ -1,7 +1,13 @@
 import random
+from unittest.mock import MagicMock
+
+from werkzeug.security import generate_password_hash
 
 from app.app import db
-from app.models import Vertex, Graph, Edge
+from app.models import Vertex, Graph, Edge, User
+
+TEST_USER_ID = random.randint(0, 5000)
+TEST_USER_PASSWORD = 'test_password'
 
 
 def get_test_vertex_no_db():
@@ -26,7 +32,15 @@ def get_test_vertex_with_graph_id_in_db(graph_id):
 
 
 def get_empty_test_graph_in_db():
-    graph = Graph(name="test_graph" + str(random.randint(0, 10000)))
+    new_user = User()
+    new_user.id = TEST_USER_ID
+    new_user.email = 'testmail'
+    new_user.name = 'testname'
+    new_user.password = TEST_USER_PASSWORD
+    db.session.add(new_user)
+
+    graph = Graph(name="test_graph" + str(random.randint(0, 10000)), user_id=1)
+    graph.user_id = new_user.id
     db.session.add(graph)
     db.session.commit()
     return db.session.query(Graph).filter_by(name=graph.name).first()
@@ -74,3 +88,24 @@ def get_test_vertex_with_two_neighbors_in_db():
     db.session.add(vertex)
     db.session.commit()
     return db.session.get(Vertex, vertex.id)
+
+
+def prepare_test_user_no_db():
+    user = User()
+    user.email = 'test@mail.com'
+    user.name = 'name'
+    user.password = generate_password_hash(TEST_USER_PASSWORD)
+    return user
+
+
+def prepare_test_user_in_db():
+    user = prepare_test_user_no_db()
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
+def get_mock_user():
+    mock_user = MagicMock()
+    mock_user.id = TEST_USER_ID
+    return mock_user

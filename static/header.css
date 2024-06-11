@@ -1,0 +1,45 @@
+header {
+    height: 50px;
+    background-color: #272640;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header a {
+    font-family: 'Arial', sans-serif;
+    text-decoration: none;
+    color: #2dcebc;
+    font-weight: bold;
+
+}
+
+.header-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+}
+
+.panel-anchor {
+    margin-left: 20px;
+    text-decoration: none;
+
+}
+
+.home-anchor {
+    margin-left: 15px;
+    font-size: 25px;
+}
+
+.user-acc-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.user-acc-buttons button {
+    width: 95px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
