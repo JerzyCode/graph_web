@@ -120,8 +120,9 @@ function resetAddEdgeParams() {
 
 export async function deleteEdge() {
     let edgeId = deleteEdgeParams.edgeId
+    let graphId = currentLoadedGraph.graphId
 
-    deleteEdgeEndpoint(edgeId)
+    deleteEdgeEndpoint(graphId, edgeId)
         .then(() => {
             console.debug(`Delete edge: edge_id=${edgeId}`)
             showSuccessMessage('Successfully deleted edge!')

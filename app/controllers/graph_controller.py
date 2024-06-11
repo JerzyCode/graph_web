@@ -65,6 +65,8 @@ class GraphController:
 
     def handle_put_vertex_request(self, req):
         vertex_id = req.args.get('vertex_id')
+        graph_id = req.args.get('graph_id')
+
         new_x_position = req.args.get('x')
         new_y_position = req.args.get('y')
         if vertex_id is None or new_x_position is None or new_y_position is None:
@@ -85,6 +87,7 @@ class GraphController:
 
     def handle_delete_edge_request(self, req):
         edge_id = req.args.get('edge_id')
+        graph_id = req.args.get('graph_id')
         if edge_id is None:
             return 'No edge_id provided', 400
         else:
