@@ -97,12 +97,15 @@ def test_get_graph_endpoint_should_return_404(client):
         mock_graph_service.assert_not_called()
 
 
-def test_post_vertex_should_return_200(client):
+def test_post_vertex_should_return_200(client, app):
     with patch('app.services.graph_service.add_vertex_to_graph') as mock_graph_service:
         # given
-        mock_graph_service.return_value = Vertex(graph_id=1, x=512, y=124)
+        with app.app_context():
+            graph = helper_test.get_empty_test_graph_in_db()
+        mock_graph_service.return_value = Vertex(graph_id=graph.id, x=512, y=124)
         # when
-        response = client.post('/graph/vertex', query_string={'graph_id': 1, 'x': 512, 'y': 124}, content_type='application/json')
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+            response = client.post('/graph/vertex', query_string={'graph_id': graph.id, 'x': 512, 'y': 124}, content_type='application/json')
         # then
         assert response.status_code == 200
         mock_graph_service.assert_called_once()
@@ -118,11 +121,14 @@ def test_post_vertex_should_return_400(client):
         mock_graph_service.assert_not_called()
 
 
-def test_delete_vertex_should_return_200(client):
+def test_delete_vertex_should_return_200(client, app):
     with patch('app.services.graph_service.delete_vertex_from_graph') as mock_graph_service:
         # given
+        with app.app_context():
+            graph = helper_test.get_empty_test_graph_in_db()
         # when
-        response = client.delete('/graph/vertex', query_string={'graph_id': 1})
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+            response = client.delete('/graph/vertex', query_string={'graph_id': graph.id})
         # then
         assert response.status_code == 200
         mock_graph_service.assert_called_once()
@@ -138,11 +144,14 @@ def test_delete_vertex_should_return_400(client):
         mock_graph_service.assert_not_called()
 
 
-def test_put_vertex_should_return_200(client):
+def test_put_vertex_should_return_200(client, app):
     with patch('app.services.graph_service.update_vertex_position') as mock_graph_service:
         # given
+        with app.app_context():
+            graph = helper_test.get_empty_test_graph_in_db()
         # when
-        response = client.put('/graph/vertex', query_string={'vertex_id': 1, 'x': 512, 'y': 124})
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+            response = client.put('/graph/vertex', query_string={'graph_id': graph.id, 'vertex_id': 1, 'x': 512, 'y': 124})
         # then
         assert response.status_code == 200
         mock_graph_service.assert_called_once()

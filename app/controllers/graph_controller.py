@@ -113,6 +113,7 @@ def graph_endpoints():
 
 @graph_bp.route(rule='/vertex', methods=['POST', 'DELETE', 'PUT'])
 @login_required
+@validate_request
 def vertex_endpoints():
     if request.method == 'POST':
         return graph_controller.handle_create_vertex_request(request)
