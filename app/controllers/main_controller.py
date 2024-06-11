@@ -20,8 +20,8 @@ def render_graphs_popup():
     return render_template('load_graph_popup.html', graphs=graphs_data)
 
 
-@main_bp.route('/')
+@main_bp.route('/graph_panel')
 @login_required
 def main_graph_panel():
     print(current_user)
-    return render_template('index.html')
+    return render_template('graph_panel.html')

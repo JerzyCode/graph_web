@@ -1,5 +1,5 @@
 import {fetchGraph, updateVertexCoordsEndpoint} from "./endpoints.js";
-import {showAddVertexPopup, showDeleteEdgePopup, showGraphActionsPopup} from "./main.js";
+import {showAddVertexPopup, showDeleteEdgePopup, showGraphActionsPopup} from "./graph_panel.js";
 import {prepareEdgesToDraw, prepareEdgeToDraw} from "./canvas_utils.js";
 import {addEdgeParams, addVertexParams, deleteEdgeParams, deleteVertexParams, selectedVertexId} from "./modify_graph_service.js";
 

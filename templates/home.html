@@ -1,22 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Graph Web</title>
+    <title>Home | Graph Manager</title>
     <link rel="stylesheet" href="../static/styles.css">
     <link rel="stylesheet" href="../static/popup.css">
+    <link rel="stylesheet" href="../static/header.css">
 
 </head>
-<body>
-<div class="main-container">
-    <header class="header">
-        Header
-    </header>
 
-    <div class="content"> TEST HOME</div>
+<body>
+<header>
+    {% include 'header.html' %}
+</header>
+<div class="main-container">
+    <div class="content">
+        <div id="popup-container-login" class="popup-container">
+            <div class="popup-content">
+                <h3>Login</h3>
+                <form method="POST" action="/login">
+                    <div class="inputs">
+                        <div class="field">
+                            <input class="input" type="email" name="email" placeholder="Your Email" autofocus="">
+                        </div>
+
+                        <div class="field">
+                            <input class="input" type="password" name="password" placeholder="Your Password">
+                        </div>
+                        <div class="field">
+                            <label class="checkbox">
+                                <input type="checkbox" name="remember">
+                                Remember me
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="sidebar-button">Login</button>
+                        <button type="button" class="sidebar-button" id="close-login-popup">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="popup-container-signup" class="popup-container">
+            <div class="popup-content">
+                <h3>Sign Up</h3>
+                <form method="POST" action="/signup">
+                    <div class="inputs">
+                        <div class="field">
+                            <input class="input" type="email" name="email" placeholder="Your Email" autofocus="">
+                        </div>
+
+                        <div class="field">
+                            <input class="input" type="password" name="password" placeholder="Your Password">
+                        </div>
+
+                        <div class="field">
+                            <input class="input" type="password" name="password-again"
+                                   placeholder="Your Password Again">
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="sidebar-button">Sign Up</button>
+                        <button type="button" class="sidebar-button" id="close-signup-popup">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        TEST
+    </div>
     <footer class="footer">
         Copyright © 2024 Jerzy Boksa
     </footer>
 </div>
 </body>
+<script type="module" src="../static/js/home.js"></script>
+
 </html>
