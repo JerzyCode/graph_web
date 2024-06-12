@@ -45,7 +45,11 @@ export async function addVertex() {
             showSuccessMessage('Successfully added vertex!')
             addVertexOnCanvas(json)
         }).catch(error => {
-            showFailMessage('Something went wrong adding vertex!')
+            if (error.message.includes('Graph exceed vertices count')) {
+                showFailMessage('You exceed vertices count, max is 100.')
+            } else {
+                showFailMessage('Something went wrong adding vertex!')
+            }
             console.log(error)
         })
 }
@@ -147,7 +151,12 @@ export function createGraph(graphName) {
                 })
         })
         .catch(error => {
-            showFailMessage('Something went wrong creating graph!')
+            if (error.message.includes('User exceed graph count')) {
+                showFailMessage('You exceeded limit of graphs.')
+            } else {
+                showFailMessage('Something went wrong creating graph!')
+            }
+            closeCreateGraphPopup()
             console.log(error)
         })
 }

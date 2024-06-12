@@ -1,9 +1,13 @@
 import random
+from unittest.mock import patch
+
+import pytest
 
 from app.app import db
 from app.models import Graph, Vertex, Edge
 from app.services import graph_service
 from app.utils.dto import GraphDTO
+from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
 from tests import helper_test
 
 
@@ -13,12 +17,26 @@ def test_create_graph(app):
         graph_name = 'test_graph'
         user_id = 2
         # when
-        graph_service.create_empty_graph(graph_name=graph_name, user_id=user_id)
+        with patch('app.services.graph_validation_service.is_graph_count_exceed_by_user', return_value=True) as validator:
+            graph_service.create_empty_graph(graph_name=graph_name, user_id=user_id)
         # then
+        validator.assert_called_once()
         saved_graph = db.session.query(Graph).filter_by(name=graph_name).first()
         assert saved_graph is not None
         assert saved_graph.edges.count() == 0
         assert saved_graph.vertices.count() == 0
+
+
+def test_create_graph_exceed_graphs_limit(app):
+    # given
+    graph_name = 'test_graph'
+    user_id = 2
+    # when
+    with pytest.raises(UserGraphCountExceededException):
+        with patch('app.services.graph_validation_service.is_graph_count_exceed_by_user', return_value=False) as validator:
+            graph_service.create_empty_graph(graph_name=graph_name, user_id=user_id)
+    # then
+    validator.assert_called_once()
 
 
 def test_delete_empty_graph(app):
@@ -65,7 +83,8 @@ def test_add_vertex_to_graph(app):
         vertex_y = random.randint(0, 500)
         graph = helper_test.get_empty_test_graph_in_db()
         # when
-        graph_service.add_vertex_to_graph(graph_id=graph.id, vertex_x=vertex_x, vertex_y=vertex_y)
+        with patch('app.services.graph_validation_service.is_graph_vertex_limit_exceed', return_value=True) as validator:
+            graph_service.add_vertex_to_graph(graph_id=graph.id, vertex_x=vertex_x, vertex_y=vertex_y)
         # then
         updated_graph = db.session.get(Graph, graph.id)
         added_vertex = updated_graph.vertices.first()
@@ -74,6 +93,21 @@ def test_add_vertex_to_graph(app):
         assert added_vertex is not None
         assert added_vertex.x == vertex_x
         assert added_vertex.y == vertex_y
+        validator.assert_called_once()
+
+
+def test_add_vertex_to_graph_count_exceed_should_throw(app):
+    with app.app_context():
+        # given
+        vertex_x = random.randint(0, 500)
+        vertex_y = random.randint(0, 500)
+        graph = helper_test.get_empty_test_graph_in_db()
+        # when
+        with pytest.raises(GraphVertexCountExceededException):
+            with patch('app.services.graph_validation_service.is_graph_vertex_limit_exceed', return_value=False) as validator:
+                graph_service.add_vertex_to_graph(graph_id=graph.id, vertex_x=vertex_x, vertex_y=vertex_y)
+        # then
+        validator.assert_called_once()
 
 
 def test_add_edge_with_no_exist_edge(app):
