@@ -12,6 +12,7 @@ def app():
     app.config['TESTING'] = True
     app.config['DEBUG'] = True
     app.config['LOGIN_DISABLED'] = True
+    app.config['SERVER_NAME'] = 'localhost'
 
     with app.app_context():
         db.create_all()

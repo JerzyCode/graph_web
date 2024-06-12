@@ -37,7 +37,14 @@ canvas.onmouseout = handleStopDragging
 canvas.onmousemove = handleMouseMove
 canvas.oncontextmenu = handleRightClick
 
-window.addEventListener('resize', repaint)
+window.addEventListener('resize', function () {
+    console.log('resize')
+    if (container.scrollWidth > window.innerWidth) {
+        container.style.overflowX = 'auto';
+    } else {
+        container.style.overflowX = 'hidden';
+    }
+});
 
 
 export async function loadGraphOnCanvas(graphId) {
