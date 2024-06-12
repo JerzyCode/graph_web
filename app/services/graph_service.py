@@ -4,11 +4,11 @@ from app.services import graph_validation_service as validator
 from app.services import vertex_service
 from app.utils import database_util as db_util
 from app.utils.dto import GraphDTO
-from app.utils.exceptions import UserGraphCountExceededException
+from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
 
 
 def create_empty_graph(graph_name, user_id):
-    if not validator.is_user_able_to_create_graph(user_id):
+    if not validator.is_graph_count_exceed_by_user(user_id):
         raise UserGraphCountExceededException
     graph = Graph(graph_name, user_id)
     db_util.save_data_in_db(graph)
@@ -27,6 +27,8 @@ def update_graph_name(graph_id, new_graph_name):
 
 
 def add_vertex_to_graph(graph_id, vertex_x, vertex_y):
+    if not validator.is_graph_vertex_limit_exceed(graph_id):
+        raise GraphVertexCountExceededException
     return vertex_service.create_vertex(x_position=vertex_x, y_position=vertex_y, graph_id=graph_id)
 
 

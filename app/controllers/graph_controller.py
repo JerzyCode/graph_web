@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from app.app import db
 from app.models import Graph
 from app.services import graph_service
-from app.utils.exceptions import UserGraphCountExceededException
+from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
 from app.utils.request_validator import validate_request
 
 graph_bp = Blueprint('graph', __name__, url_prefix='/graph/')
@@ -52,7 +52,10 @@ class GraphController:
         if vertex_x is None or vertex_y is None:
             return 'No x or y provided', 400
         else:
-            created_vertex = self._service.add_vertex_to_graph(graph_id=graph_id, vertex_x=vertex_x, vertex_y=vertex_y)
+            try:
+                created_vertex = self._service.add_vertex_to_graph(graph_id=graph_id, vertex_x=vertex_x, vertex_y=vertex_y)
+            except GraphVertexCountExceededException as ex:
+                return {'error': ex.message}, 400
             return jsonify(created_vertex.to_dict()), 200
 
     def handle_delete_vertex_request(self, req):
