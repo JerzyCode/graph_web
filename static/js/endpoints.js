@@ -91,19 +91,15 @@ export async function deleteEdgeEndpoint(graphId, edgeId) {
 }
 
 export async function createGraphEndpoint(graphName) {
-    try {
-        const response = await fetch(`/graph?graph_name=${graphName}`, {
-            method: 'POST'
-        })
-        if (!response.ok) {
-            throw new Error(`Failed to create graph. Status: ${response.status}`);
-        }
-        const responseData = await response.json();
-        return responseData.graph_id;
-    } catch (error) {
-        console.error('There was a problem with the create graph operation:', error);
-        throw error;
+    const response = await fetch(`/graph?graph_name=${graphName}`, {
+        method: 'POST'
+    })
+    const responseData = await response.json();
+
+    if (!response.ok) {
+        throw new Error(`${responseData.error}`);
     }
+    return responseData.graph_id;
 }
 
 export async function updateVertexCoordsEndpoint(graphId, vertexId, newX, newY) {

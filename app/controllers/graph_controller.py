@@ -23,7 +23,7 @@ class GraphController:
             try:
                 graph_id = self._service.create_empty_graph(graph_name=graph_name, user_id=user_id)
             except UserGraphCountExceededException as ex:
-                return ex.message, 400
+                return {'error': ex.message}, 400
             return {'graph_id': graph_id}, 200
 
     def handle_delete_graph_request(self, req):

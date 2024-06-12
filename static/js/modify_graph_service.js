@@ -147,7 +147,12 @@ export function createGraph(graphName) {
                 })
         })
         .catch(error => {
-            showFailMessage('Something went wrong creating graph!')
+            if (error.message.includes('User exceed graph count')) {
+                showFailMessage('You exceeded limit of graphs.')
+            } else {
+                showFailMessage('Something went wrong creating graph!')
+            }
+            closeCreateGraphPopup()
             console.log(error)
         })
 }
