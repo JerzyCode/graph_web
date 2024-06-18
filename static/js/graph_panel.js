@@ -1,10 +1,12 @@
 import {repaint} from "./canvas.js";
 import {closeYourGraphsPopup, openYourGraphsPopup} from "./your_graphs_popup.js";
 import {addVertex, createGraph, deleteEdge, deleteVertex, selectToEdge} from "./modify_graph_service.js";
+import {runDfsAlgorithm} from "./algorithm_service.js";
 
 const addVertexPopup = document.getElementById('add-vertex-popup')
 const addVertexButton = document.getElementById('add-vertex-button')
 
+const runDfsButton = document.getElementById('dfs-algorithm-button')
 const selectEdgeButton = document.getElementById('select-to-edge-button')
 
 const deleteVertexButton = document.getElementById('delete-vertex-button')
@@ -38,6 +40,9 @@ const addListeners = function () {
 
     if (deleteEdgeButton) {
         deleteEdgeButton.addEventListener('click', deleteEdge)
+    }
+    if (runDfsButton) {
+        runDfsButton.addEventListener('click', runDfsAlgorithm)
     }
 
     if (createGraphButton) {
@@ -128,4 +133,6 @@ function closePopup(popup) {
     popup.style.display = 'none';
 }
 
-addListeners()
+window.addEventListener('DOMContentLoaded', () => {
+    addListeners()
+})

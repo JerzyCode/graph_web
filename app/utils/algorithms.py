@@ -29,5 +29,6 @@ def _dfs(vertex: VertexAlgorithm, graph: GraphAlgorithm, visited, objects_to_col
 
 def _find_edge(vertex_in: VertexAlgorithm, vertex_out: VertexAlgorithm, edges):
     for edge in edges:
-        if edge.vertex_in == vertex_in and edge.vertex_out == vertex_out:
+        if ((edge.vertex_in == vertex_in and edge.vertex_out == vertex_out)
+                or (edge.vertex_in == vertex_out and edge.vertex_out == vertex_in)):
             return edge
