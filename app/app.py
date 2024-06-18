@@ -5,10 +5,10 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-def create_app(db_url='sqlite:///app.db'):
+def create_app(db_url='sqlite:///graph_app.db'):
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
-    app.config['SECRET_KEY'] = 'nosecretkeeycurrently'
+    app.config['SECRET_KEY'] = '#=+)86!b0q0sjzn8@w=spbrrdi4r=qho_s02kvs&)vo_mg#)&-'
     app.template_folder = '../templates/'
     app.static_folder = '../static/'
     db.init_app(app)
