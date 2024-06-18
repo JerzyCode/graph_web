@@ -79,6 +79,32 @@ def get_test_graph_with_edges_in_db():
     return db.session.get(Graph, graph.id)
 
 
+def get_test_graph_with_multiple_edges_in_db():
+    graph = get_empty_test_graph_in_db()
+
+    vertices = [get_test_vertex_with_graph_id_in_db(graph.id) for _ in range(10)]
+    graph.vertices.extend(vertices)
+
+    edges_data = [
+        (0, 1), (0, 2), (1, 3), (2, 4), (3, 5), (4, 6), (5, 7)
+    ]
+    edges = []
+    for source_idx, target_idx in edges_data:
+        source_vertex = vertices[source_idx]
+        target_vertex = vertices[target_idx]
+        edge = _get_test_edge_with_graph_id_in_db(source_vertex, target_vertex, graph.id)
+        edges.append(edge)
+        source_vertex.neighbors.append(target_vertex)
+        target_vertex.neighbors.append(source_vertex)
+
+    graph.edges.extend(edges)
+
+    db.session.add_all(vertices + edges + [graph])
+    db.session.commit()
+
+    return db.session.get(Graph, graph.id)
+
+
 def get_test_vertex_with_two_neighbors_in_db():
     vertex = get_test_vertex_in_db()
     first_neigh = get_test_vertex_in_db()

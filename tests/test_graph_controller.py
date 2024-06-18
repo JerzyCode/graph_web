@@ -2,7 +2,7 @@ import json
 from unittest.mock import patch
 
 from app.models import Vertex, Edge, User
-from app.utils.dto import GraphDTO
+from app.utils.classes import GraphDTO
 from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
 from tests import helper_test
 

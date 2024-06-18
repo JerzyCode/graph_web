@@ -3,7 +3,7 @@ from app.services import edge_service
 from app.services import graph_validation_service as validator
 from app.services import vertex_service
 from app.utils import database_util as db_util
-from app.utils.dto import GraphDTO
+from app.utils.classes import GraphDTO
 from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
 
 

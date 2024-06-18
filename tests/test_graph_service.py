@@ -6,7 +6,7 @@ import pytest
 from app.app import db
 from app.models import Graph, Vertex, Edge
 from app.services import graph_service
-from app.utils.dto import GraphDTO
+from app.utils.classes import GraphDTO
 from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
 from tests import helper_test
 
