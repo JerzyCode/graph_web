@@ -55,3 +55,9 @@ class GraphAlgorithm:
         for edge in self.edges:
             edges_str += str(edge) + ', \n'
         return vertices_str + '\n' + edges_str + '\n'
+
+
+class ObjectToColor:
+    def __init__(self, obj_id, obj_type: str):
+        self.obj_id = obj_id
+        self.obj_type = obj_type

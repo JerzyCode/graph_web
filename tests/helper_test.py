@@ -86,7 +86,7 @@ def get_test_graph_with_multiple_edges_in_db():
     graph.vertices.extend(vertices)
 
     edges_data = [
-        (0, 1), (0, 2), (1, 3), (2, 4), (3, 5), (4, 6), (5, 7)
+        (0, 1), (0, 2), (1, 3), (2, 4), (3, 5), (4, 6), (5, 7), (2, 6)
     ]
     edges = []
     for source_idx, target_idx in edges_data:

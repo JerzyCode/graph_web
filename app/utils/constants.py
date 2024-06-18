@@ -15,3 +15,6 @@ GRAPH_PANEL_URL = 'main.main_graph_panel'
 
 MAX_GRAPHS_PER_USER = 100
 MAX_VERTICES_PER_GRAPH = 100
+
+VERTEX = 'vertex'
+EDGE = 'edge'
