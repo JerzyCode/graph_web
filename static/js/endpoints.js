@@ -115,3 +115,35 @@ export async function updateVertexCoordsEndpoint(graphId, vertexId, newX, newY) 
         throw error;
     }
 }
+
+export async function runDfsAlgorithmEndpoint(graphId) {
+    try {
+        const response = await fetch(`/algorithm/dfs?graph_id=${graphId}`, {
+            method: 'GET'
+        })
+        if (!response.ok) {
+            throw new Error(`Failed to run dfs algorithm`);
+        }
+        return await response.json()
+
+    } catch (error) {
+        console.error('There was a problem running dfs:', error);
+        throw error;
+    }
+}
+
+export async function runBfsAlgorithmEndpoint(graphId) {
+    try {
+        const response = await fetch(`/algorithm/bfs?graph_id=${graphId}`, {
+            method: 'GET'
+        })
+        if (!response.ok) {
+            throw new Error(`Failed to run bfs algorithm`);
+        }
+        return await response.json()
+
+    } catch (error) {
+        console.error('There was a problem running bfs:', error);
+        throw error;
+    }
+}

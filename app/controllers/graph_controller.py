@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from app.app import db
 from app.models import Graph
 from app.services import graph_service
-from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
+from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException, EdgeAlreadyExistsException
 from app.utils.request_validator import validate_request
 
 graph_bp = Blueprint('graph', __name__, url_prefix='/graph/')
@@ -84,8 +84,11 @@ class GraphController:
         if vertex_in_id is None or vertex_out_id is None:
             return 'No graph_id, vertex_out_id vertex_in_id y provided', 400
         else:
-            created_edge = self._service.add_edge_to_graph(graph_id=graph_id, vertex_in_id=vertex_in_id, vertex_out_id=vertex_out_id)
-            return jsonify(created_edge.to_dict()), 200
+            try:
+                created_edge = self._service.add_edge_to_graph(graph_id=graph_id, vertex_in_id=vertex_in_id, vertex_out_id=vertex_out_id)
+                return jsonify(created_edge.to_dict()), 200
+            except EdgeAlreadyExistsException:
+                return 'Graph already has edge', 400
 
     def handle_delete_edge_request(self, req):
         edge_id = req.args.get('edge_id')

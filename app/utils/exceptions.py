@@ -26,3 +26,8 @@ class GraphVertexCountExceededException(Exception):
 
     def __init__(self):
         self.message = f"Graph exceed vertices count. Max number of vertices per graph is ${MAX_VERTICES_PER_GRAPH}"
+
+
+class EdgeAlreadyExistsException(Exception):
+    def __init__(self):
+        self.message = 'Edge already exists.'

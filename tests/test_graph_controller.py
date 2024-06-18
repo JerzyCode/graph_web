@@ -2,8 +2,8 @@ import json
 from unittest.mock import patch
 
 from app.models import Vertex, Edge, User
-from app.utils.dto import GraphDTO
-from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
+from app.utils.classes import GraphDTO
+from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException, EdgeAlreadyExistsException
 from tests import helper_test
 
 
@@ -225,6 +225,22 @@ def test_post_edge_should_return_400(client):
         # then
         assert response.status_code == 400
         mock_graph_service.assert_not_called()
+
+
+def test_post_edge_should_return_400_edge_exists(client, app):
+    with patch('app.services.graph_service.add_edge_to_graph') as mock_graph_service:
+        # given
+        with app.app_context():
+            graph = helper_test.get_test_graph_with_multiple_edges_in_db()
+            edge = graph.edges.first()
+        mock_graph_service.side_effect = EdgeAlreadyExistsException
+        # when
+        with patch('flask_login.utils._get_user', return_value=helper_test.get_mock_user()):
+            response = client.post('/graph/edge', query_string={'graph_id': graph.id,
+                                                                'vertex_in_id': edge.vertex_in_id, 'vertex_out_id': edge.vertex_out_id})
+        # then
+        assert response.status_code == 400
+        mock_graph_service.assert_called_once()
 
 
 def test_delete_edge_should_return_200(client, app):

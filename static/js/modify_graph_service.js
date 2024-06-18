@@ -97,7 +97,7 @@ export async function addEdge() {
             addEdgeOnCanvas(JSON.parse(addedEdgeResp))
             console.log('Added edge')
         }).catch(error => {
-        showFailMessage('Something went wrong deleting edge!')
+        showFailMessage('Something went wrong adding edge!')
         console.log(error)
     })
     resetAddEdgeParams()

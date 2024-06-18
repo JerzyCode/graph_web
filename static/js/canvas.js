@@ -16,6 +16,7 @@ const EDGE_WIDTH = 3
 const EDGE_COLOR = '#2dcebc'
 const EDGE_REPAINT_COLOR = '#d90368'
 
+let isMouseMoveDisabled = false
 
 let graph
 let vertices = []
@@ -113,6 +114,9 @@ function updateVertexPosition() {
 }
 
 function handleMouseMove(event) {
+    if (isMouseMoveDisabled) {
+        return;
+    }
     canvas.style.cursor = 'default'
     let canvasCoords = calculateCoordsOnCanvas(event)
 
@@ -374,3 +378,32 @@ export function deleteEdgeOnCanvas(edgeId) {
     edges = edges.filter(edge => edge.id !== edgeId)
     repaint()
 }
+
+export async function colorGraphAlgorithm(objectsToColor) {
+    isMouseMoveDisabled = true
+    for (let obj of objectsToColor) {
+        if (obj.type === 'vertex') {
+            colorVertex(obj.id)
+        } else if (obj.type === 'edge') {
+            colorEdge(obj.id)
+        }
+        await delay(700);
+    }
+    isMouseMoveDisabled = false
+}
+
+function colorEdge(edgeId) {
+    edgesColor.set(edgeId, EDGE_REPAINT_COLOR)
+    repaint()
+}
+
+function colorVertex(vertexId) {
+    verticesColor.set(vertexId, VERTEX_REPAINT_COLOR)
+    repaint()
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+

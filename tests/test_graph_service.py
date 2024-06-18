@@ -6,8 +6,8 @@ import pytest
 from app.app import db
 from app.models import Graph, Vertex, Edge
 from app.services import graph_service
-from app.utils.dto import GraphDTO
-from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
+from app.utils.classes import GraphDTO
+from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException, EdgeAlreadyExistsException
 from tests import helper_test
 
 
@@ -140,13 +140,10 @@ def test_add_edge_to_graph_with_exist_edge(app):
         existing_edge = graph.edges.first()
         vertex_in = existing_edge.vertex_in
         vertex_out = existing_edge.vertex_out
-        # when
-        graph_service.add_edge_to_graph(graph_id=graph.id, vertex_in_id=vertex_in.id, vertex_out_id=vertex_out.id)
-        # then
-        updated_graph = db.session.get(Graph, graph.id)
-        assert updated_graph is not None
-        assert updated_graph.vertices.count() == 2
-        assert updated_graph.edges.count() == edge_count_before
+        # when && then
+        with pytest.raises(EdgeAlreadyExistsException):
+            graph_service.add_edge_to_graph(graph_id=graph.id, vertex_in_id=vertex_in.id, vertex_out_id=vertex_out.id)
+        assert edge_count_before == graph.edges.count()
 
 
 def test_get_graph(app):
