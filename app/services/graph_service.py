@@ -4,7 +4,7 @@ from app.services import graph_validation_service as validator
 from app.services import vertex_service
 from app.utils import database_util as db_util
 from app.utils.classes import GraphDTO
-from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException
+from app.utils.exceptions import UserGraphCountExceededException, GraphVertexCountExceededException, EdgeAlreadyExistsException
 
 
 def create_empty_graph(graph_name, user_id):
@@ -49,7 +49,7 @@ def add_edge_to_graph(graph_id, vertex_in_id, vertex_out_id):
     vertex_out = db_util.get_data_from_db_or_404(Vertex, vertex_out_id)
     graph = db_util.get_data_from_db_or_404(Graph, graph_id)
     if _check_if_graph_has_edge(graph, vertex_in, vertex_out):
-        return
+        raise EdgeAlreadyExistsException
     edge = edge_service.create_edge(vertex_in=vertex_in, vertex_out=vertex_out, graph_id=graph_id)
     vertex_service.add_neighbor_to_vertex(vertex_in, vertex_out)
     vertex_service.add_neighbor_to_vertex(vertex_out, vertex_in)
@@ -73,8 +73,10 @@ def get_graph_by_id(graph_id):
 
 
 def _check_if_graph_has_edge(graph, vertex_in, vertex_out):
-    edge = graph.edges.filter_by(vertex_in=vertex_in, vertex_out=vertex_out).first()
-    return edge is not None
+    # TODO make for directed graph
+    edge1 = graph.edges.filter_by(vertex_in=vertex_in, vertex_out=vertex_out).first()
+    edge2 = graph.edges.filter_by(vertex_in=vertex_out, vertex_out=vertex_in).first()
+    return edge1 is not None or edge2 is not None
 
 
 def _delete_vertex_with_incident_edges(graph, vertex):
