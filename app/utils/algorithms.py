@@ -19,7 +19,6 @@ def depth_search(graph: GraphAlgorithm) -> List[ObjectToColor]:
 
 def _dfs(vertex: VertexAlgorithm, graph: GraphAlgorithm, visited, objects_to_color: List):
     visited[vertex] = True
-    print('vertex=' + str(vertex))
     objects_to_color.append(ObjectToColor(obj_id=vertex.id, obj_type=VERTEX))
     for neighbor in vertex.neighbors:
         if not visited[neighbor]:
