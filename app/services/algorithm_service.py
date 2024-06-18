@@ -14,3 +14,9 @@ def run_dfs_algorithm(graph_id):
     graph = prepare_graph(graph_id)
     objects_to_color = alg.depth_search(graph)
     return objects_to_color
+
+
+def run_bfs_algorithm(graph_id):
+    graph = prepare_graph(graph_id)
+    objects_to_color = alg.binary_search(graph)
+    return objects_to_color

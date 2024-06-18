@@ -15,3 +15,14 @@ def dfs_endpoint():
     objects_to_color = algorithm_service.run_dfs_algorithm(graph_id)
     objects_dict = [obj.to_dict() for obj in objects_to_color]
     return jsonify(objects_dict), 200
+
+
+@algorithm_bp.route('/bfs', methods=['GET'])
+@login_required
+def bfs_endpoint():
+    graph_id = request.args.get('graph_id')
+    if graph_id is None:
+        return 'No graph_id provided', 400
+    objects_to_color = algorithm_service.run_bfs_algorithm(graph_id)
+    objects_dict = [obj.to_dict() for obj in objects_to_color]
+    return jsonify(objects_dict), 200

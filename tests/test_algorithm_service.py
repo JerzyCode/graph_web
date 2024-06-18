@@ -28,3 +28,14 @@ def test_run_dfs(app):
         # then
         assert objects_to_color is not None
         assert len(objects_to_color) >= graph.vertices.count()
+
+
+def test_run_bfs(app):
+    with app.app_context():
+        # given
+        graph = helper_test.get_test_graph_with_multiple_edges_in_db()
+        # when
+        objects_to_color = algorithm_service.run_bfs_algorithm(graph.id)
+        # then
+        assert objects_to_color is not None
+        assert len(objects_to_color) >= graph.vertices.count()
