@@ -32,6 +32,9 @@ def create_app(db_url='sqlite:///app.db'):
     from app.controllers.auth_controller import auth_bp
     app.register_blueprint(auth_bp)
 
+    from app.controllers.algorithm_controller import algorithm_bp
+    app.register_blueprint(algorithm_bp)
+
     @app.errorhandler(404)
     def page_not_found(e):
         return redirect(url_for('main.welcome_page'))

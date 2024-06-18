@@ -61,3 +61,9 @@ class ObjectToColor:
     def __init__(self, obj_id, obj_type: str):
         self.obj_id = obj_id
         self.obj_type = obj_type
+
+    def to_dict(self):
+        return {
+            'id': self.obj_id,
+            'type': self.obj_type
+        }
